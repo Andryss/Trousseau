@@ -17,6 +17,7 @@ create table users (
 
 create table photos (
     id bigserial primary key,
+    data bytea,
     upload_datetime timestamp,
     upload_user_id bigserial references users(id)
 );

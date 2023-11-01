@@ -10,7 +10,11 @@ insert into users values
     (3, 'user2', 'password', 'USER', 1, '803'),
     (4, 'user3', 'password', 'USER', 1, '203');
 
-insert into photos values (?);
+insert into photos values
+    (1, pg_read_binary_file('img/1.jpg'), '2023-09-01 10:00', 2),
+    (2, pg_read_binary_file('img/2.jpg'), '2023-09-01 10:30', 2),
+    (3, pg_read_binary_file('img/3.jpg'), '2023-09-02 13:00', 2),
+    (4, pg_read_binary_file('img/4.jpg'), '2023-09-03 15:00', 3);
 
 insert into category_groups values
     (1, 'Мебель', '???'),
@@ -43,3 +47,9 @@ insert into categories values
     (20, 'Мыло', '???', 5),
     (21, 'Зубная щетка', '???', 5),
     (22, 'Другое', 'Все, что не подошло под другие категории', 6);
+
+insert into items values
+    (1, 'Провод переходник USB/Type-c', 1, '???', 'ACTIVE', 2, '2023-09-01 10:20'),
+    (2, 'Стул ортопедический на колесиках', 2, '???', 'ACTIVE', 2, '2023-09-01 10:50'),
+    (3, 'Набор шампуней и гелей для душа', 3, '???', 'ACTIVE', 2, '2023-09-02 13:20'),
+    (4, 'Шапка ушанка', 4, '???', 'ACTIVE', 3, '2023-09-03 15:20');
