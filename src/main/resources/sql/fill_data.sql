@@ -52,4 +52,32 @@ insert into items values
     (1, 'Провод переходник USB/Type-c', 1, '???', 'ACTIVE', 2, '2023-09-01 10:20'),
     (2, 'Стул ортопедический на колесиках', 2, '???', 'ACTIVE', 2, '2023-09-01 10:50'),
     (3, 'Набор шампуней и гелей для душа', 3, '???', 'ACTIVE', 2, '2023-09-02 13:20'),
-    (4, 'Шапка ушанка', 4, '???', 'ACTIVE', 3, '2023-09-03 15:20');
+    (4, 'Шапка ушанка', 4, '???', 'BLOCKED', 3, '2023-09-03 15:20');
+
+insert into item_status_history values
+    (1, 1, 'ARCHIVED', 'ACTIVE', '2023-09-01 10:21', 2),
+    (2, 2, 'ARCHIVED', 'ACTIVE', '2023-09-01 10:51', 2),
+    (3, 3, 'ARCHIVED', 'ACTIVE', '2023-09-02 13:21', 2),
+    (4, 4, 'ARCHIVED', 'ACTIVE', '2023-09-03 15:21', 3),
+    (3, 3, 'ACTIVE', 'BLOCKED', '2023-09-03 18:00', 4);
+
+insert into bookings values
+    (1, 4, 3, '2023-09-03 18:00');
+
+insert into saved_items values
+    (4, 3, '2023-09-03 15:00'),
+    (4, 4, '2023-09-03 15:05'),
+    (2, 3, '2023-09-03 13:25');
+
+insert into subscriptions values
+    (1, 4, 'Хочу гель или мыло для душа', '2023-09-01 15:10');
+
+insert into item_categories values
+    (1, 5),
+    (2, 1),
+    (3, 19),
+    (4, 11);
+
+insert into subscription_categories values
+    (1, 19),
+    (1, 20);
