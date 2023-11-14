@@ -5,10 +5,10 @@ insert into dormitories values
     (4, 'Общежитие №4', 'Санкт-Петербург, ул. Белорусская, д. 6, лит. А');
 
 insert into users values
-    (1, 'admin', 'password', 'ADMIN', 1, '101'),
-    (2, 'user1', 'password', 'USER', 1, '205'),
-    (3, 'user2', 'password', 'USER', 1, '803'),
-    (4, 'user3', 'password', 'USER', 1, '203');
+    (1, 'admin', 'password-hash', 'ADMIN', 1, '101'),
+    (2, 'user1', 'password-hash', 'USER', 1, '205'),
+    (3, 'user2', 'password-hash', 'USER', 1, '803'),
+    (4, 'user3', 'password-hash', 'USER', 1, '203');
 
 insert into photos values
     (1, pg_read_binary_file('/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/img/1.jpg'), '2023-09-01 10:00', 2),
