@@ -10,6 +10,7 @@ insert into users (login, password, role, dormitory_id, room) values
     ('user2', 'password-hash', 'USER', 1, '803'),
     ('user3', 'password-hash', 'USER', 1, '203');
 
+-- TODO: научиться в относительные пути
 insert into photos (data, upload_datetime, upload_user_id) values
     (pg_read_binary_file('/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/img/1.jpg'), '2023-09-01 10:00', 2),
     (pg_read_binary_file('/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/img/2.jpg'), '2023-09-01 10:30', 2),
