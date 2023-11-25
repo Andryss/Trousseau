@@ -11,12 +11,18 @@ insert into users (login, password, role, dormitory_id, room) values
     ('user3', 'password-hash', 'USER', 1, '203');
 
 -- TODO: научиться в относительные пути
+create function rel2abs(rel text) returns text as $$
+  select '/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/' || rel;
+$$ language sql;
+
 insert into photos (data, upload_datetime, upload_user_id) values
-    (pg_read_binary_file('/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/img/1.jpg'), '2023-09-01 10:00', 2),
-    (pg_read_binary_file('/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/img/2.jpg'), '2023-09-01 10:30', 2),
-    (pg_read_binary_file('/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/img/3.jpg'), '2023-09-02 13:00', 2),
-    (pg_read_binary_file('/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/img/4.jpg'), '2023-09-03 15:00', 3),
-    (pg_read_binary_file('/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/img/5.jpg'), '2023-09-03 16:00', 3);
+    (pg_read_binary_file(rel2abs('img/1.jpg')), '2023-09-01 10:00', 2),
+    (pg_read_binary_file(rel2abs('img/2.jpg')), '2023-09-01 10:30', 2),
+    (pg_read_binary_file(rel2abs('img/3.jpg')), '2023-09-02 13:00', 2),
+    (pg_read_binary_file(rel2abs('img/4.jpg')), '2023-09-03 15:00', 3),
+    (pg_read_binary_file(rel2abs('img/5.jpg')), '2023-09-03 16:00', 3);
+
+drop function if exists rel2abs;
 
 insert into category_groups (name, description) values
     ('Мебель', 'Включает в себя все виды предметов интерьера, предназначенных для обеспечения комфорта и функциональности жилого пространства'),
