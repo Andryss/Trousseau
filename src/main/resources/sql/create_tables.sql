@@ -39,7 +39,7 @@ create table items (
     id bigserial primary key,
     title varchar(64) not null,
     photo_id bigserial references photos(id) not null,
-    description varchar(8192) not null,
+    description varchar(1024) not null,
     status varchar(16) not null,
     user_id bigserial references users(id) not null,
     creation_datetime timestamp not null,
