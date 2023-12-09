@@ -5,23 +5,10 @@ insert into dormitories (name, address) values
     ('Общежитие №4', 'Санкт-Петербург, ул. Белорусская, д. 6, лит. А');
 
 insert into users (login, password, role, dormitory_id, room) values
-    ('admin', 'password-hash', 'ADMIN', 1, '101'),
-    ('user1', 'password-hash', 'USER', 1, '205'),
-    ('user2', 'password-hash', 'USER', 1, '803'),
-    ('user3', 'password-hash', 'USER', 1, '203');
-
-create function rel2abs(rel text) returns text as $$
-  select '/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/' || rel;
-$$ language sql;
-
-insert into photos (data, upload_datetime, upload_user_id) values
-    (pg_read_binary_file(rel2abs('img/1.jpg')), '2023-09-01 10:00', 2),
-    (pg_read_binary_file(rel2abs('img/2.jpg')), '2023-09-01 10:30', 2),
-    (pg_read_binary_file(rel2abs('img/3.jpg')), '2023-09-02 13:00', 2),
-    (pg_read_binary_file(rel2abs('img/4.jpg')), '2023-09-03 15:00', 3),
-    (pg_read_binary_file(rel2abs('img/5.jpg')), '2023-09-03 16:00', 3);
-
-drop function if exists rel2abs;
+    ('admin', '$2a$10$2UsL3aOQ2v7h7mIQ2URGtuuhn0j/yP4LLPFQmpow0juBxeXR6.3ve', 'ADMIN', 1, '101'),
+    ('user1', '$2a$10$l.XoDylw4IgQamW0AjK1AuiSeEvhozu1KIzvcZjiaUT5MgbpV5Cyy', 'USER', 1, '205'),
+    ('user2', '$2a$10$aoLJCX0d0fWUZRjeQQYOJetu2NHq1iuyMs201kYZAUzAgALzL2kSC', 'USER', 1, '803'),
+    ('user3', '$2a$10$JHnLUvRlUL.uDIe7mbr1duFtjzbS0v5d1/3Owm1tBm2u3ycvhYdQq', 'USER', 1, '203');
 
 insert into category_groups (name, description) values
     ('Мебель', 'Включает в себя все виды предметов интерьера, предназначенных для обеспечения комфорта и функциональности жилого пространства'),

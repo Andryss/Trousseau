@@ -18,8 +18,7 @@ create table users (
 create table photos (
     id bigserial primary key,
     data bytea not null,
-    upload_datetime timestamp not null,
-    upload_user_id bigserial references users(id) not null
+    upload_datetime timestamp not null
 );
 
 create table category_groups (

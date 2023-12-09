@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+</head>
+<body>
+    <h2>Страница профиля</h2>
+    <a th:href="@{/logout}">Выйти</a>
+    <table border="1">
+        <tr>
+            <td>Имя пользователя</td>
+            <td th:text="${user.getLogin()}"></td>
+        </tr>
+        <tr>
+            <td>Роль</td>
+            <td th:text="${user.getRole()}"></td>
+        </tr>
+        <tr>
+            <td>Общежитие</td>
+            <td>
+                <table border="1">
+                    <tr>
+                        <td>Название</td>
+                        <td th:text="${dormitory.getName()}"></td>
+                    </tr>
+                    <tr>
+                        <td>Адрес</td>
+                        <td th:text="${dormitory.getAddress()}"></td>
+                    </tr>
+                    <tr>
+                        <td>Комната</td>
+                        <td th:text="${user.getRoom()}"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <a th:href="@{/home}">Главная</a>
+</body>
+</html>
