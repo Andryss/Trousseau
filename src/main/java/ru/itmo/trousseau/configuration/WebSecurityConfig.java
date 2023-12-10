@@ -51,7 +51,6 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .requestMatchers(GET, "/ping").permitAll()
-                        .requestMatchers("/photos/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)
