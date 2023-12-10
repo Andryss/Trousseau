@@ -6,4 +6,5 @@ import ru.itmo.trousseau.model.Item;
 
 public interface ItemRepository {
     List<Item> findAllBookedBy(long userId);
+    List<Item> findAllBySearch(String query, String[] categories);
 }

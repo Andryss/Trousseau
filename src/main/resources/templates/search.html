@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск</title>
+</head>
+<body>
+    <h2>Страница поиска</h2>
+    <form th:action="@{/search}" th:object="${searchInfo}" method="get">
+        <input type="text" th:field="*{query}" placeholder="Поиск...">
+        <br/>
+        <table>
+            <tr th:each="category : ${searchInfo.categories}">
+                <td>
+                    <input type="checkbox" th:field="*{categories}" th:value="${category.name}"/>
+                    <label th:for="${#ids.prev('categories')}" th:text="${category.name}" th:title="${category.description}"></label>
+                </td>
+                <td>
+                    <label th:text="${category.groupName}" th:title="${category.groupDescription}"></label>
+                </td>
+            </tr>
+        </table>
+        <input type="submit" value="Поиск">
+    </form>
+    <br/>
+    <th:block th:if="${!#lists.isEmpty(result)}">
+        <table  border="1">
+            <thead>
+            <tr><td align="center">Результат</td></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(result)}">
+                <td align="center">*пусто*</td>
+            </tr>
+            <tr th:each="item : ${result}">
+                <td width="300">
+                    <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300"/>
+                    <h4 th:text="${item.title}"></h4>
+                    <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <br/>
+    </th:block>
+    <a th:href="@{/home}">Главная</a>
+    <a th:href="@{/search}">Поиск</a>
+    <a th:href="@{/profile}">Профиль</a>
+</body>
+</html>

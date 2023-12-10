@@ -5,6 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.itmo.trousseau.model.Item;
+import ru.itmo.trousseau.messages.SearchRequest;
 import ru.itmo.trousseau.repository.ItemRepository;
 
 @Service
@@ -16,5 +17,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<Item> findAllBookedBy(long userId) {
         return itemRepository.findAllBookedBy(userId);
+    }
+
+    @Override
+    public List<Item> findAllWithSearch(SearchRequest search) {
+        return itemRepository.findAllBySearch(search.getQuery(), search.getCategories());
     }
 }

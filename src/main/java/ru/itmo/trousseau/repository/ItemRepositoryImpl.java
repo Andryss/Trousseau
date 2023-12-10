@@ -16,6 +16,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     private final RowMapper<Item> mapper;
 
     private final String selectBookedByQuery;
+    private final String selectAllBySearchQuery;
 
 
     public ItemRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -24,11 +25,22 @@ public class ItemRepositoryImpl implements ItemRepository {
         this.selectBookedByQuery = """
             select * from find_booked_items(:userId)
             """;
+        this.selectAllBySearchQuery = """
+            select * from find_items(:query, :categories)
+            """;
     }
 
     @Override
     public List<Item> findAllBookedBy(long userId) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
         return jdbcTemplate.query(selectBookedByQuery, params, mapper);
+    }
+
+    @Override
+    public List<Item> findAllBySearch(String query, String[] categories) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("query", query);
+        params.addValue("categories", categories);
+        return jdbcTemplate.query(selectAllBySearchQuery, params, mapper);
     }
 }
