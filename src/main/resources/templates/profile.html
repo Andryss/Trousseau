@@ -6,36 +6,59 @@
 </head>
 <body>
     <h2>Страница профиля</h2>
-    <a th:href="@{/logout}">Выйти</a>
     <table border="1">
-        <tr>
-            <td>Имя пользователя</td>
-            <td th:text="${user.getLogin()}"></td>
-        </tr>
-        <tr>
-            <td>Роль</td>
-            <td th:text="${user.getRole()}"></td>
-        </tr>
-        <tr>
-            <td>Общежитие</td>
-            <td>
-                <table border="1">
-                    <tr>
-                        <td>Название</td>
-                        <td th:text="${dormitory.getName()}"></td>
-                    </tr>
-                    <tr>
-                        <td>Адрес</td>
-                        <td th:text="${dormitory.getAddress()}"></td>
-                    </tr>
-                    <tr>
-                        <td>Комната</td>
-                        <td th:text="${user.getRoom()}"></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
+        <thead>
+            <tr><td colspan="2" align="center">Профиль (<a th:href="@{/logout}">выйти</a>)</td></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Имя пользователя</td>
+                <td th:text="${user.login}"></td>
+            </tr>
+            <tr>
+                <td>Роль</td>
+                <td th:text="${user.role}"></td>
+            </tr>
+            <tr>
+                <td>Общежитие</td>
+                <td>
+                    <table border="1">
+                        <tr>
+                            <td>Название</td>
+                            <td th:text="${dormitory.name}"></td>
+                        </tr>
+                        <tr>
+                            <td>Адрес</td>
+                            <td th:text="${dormitory.address}"></td>
+                        </tr>
+                        <tr>
+                            <td>Комната</td>
+                            <td th:text="${user.room}"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
     </table>
+    <br/>
+    <table border="1">
+        <thead>
+            <tr><td align="center">Бронирования</td></tr>
+        </thead>
+        <tbody>
+            <tr th:if="${#lists.isEmpty(bookings)}">
+                <td align="center">*пусто*</td>
+            </tr>
+            <tr th:each="item : ${bookings}">
+                <td width="300">
+                    <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300"/>
+                    <h4 th:text="${item.title}"></h4>
+                    <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
     <a th:href="@{/home}">Главная</a>
 </body>
 </html>
