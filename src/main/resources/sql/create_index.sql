@@ -1,4 +1,4 @@
-create extension pg_trgm;
+create extension if not exists pg_trgm;
 
 create index if not exists items_title_trgm on items using gin(title gin_trgm_ops);
 

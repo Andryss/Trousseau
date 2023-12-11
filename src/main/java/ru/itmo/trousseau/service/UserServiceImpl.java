@@ -15,6 +15,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
+    public User findById(long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        return userOptional.orElseThrow(() -> new NotFoundException(String.valueOf(id)));
+    }
+
+    @Override
     public User findByUsername(String username) {
         Optional<User> userOptional = userRepository.findByLoginIgnoreCase(username);
         return userOptional.orElseThrow(() -> new NotFoundException(username));

@@ -16,15 +16,29 @@ public class UserRepositoryImpl implements UserRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
     private final RowMapper<User> mapper;
 
+    private final String selectByIdQuery;
     private final String selectByLoginQuery;
 
 
     public UserRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = new BeanPropertyRowMapper<>(User.class);
+        this.selectByIdQuery = """
+            select * from users where id = :id
+            """;
         this.selectByLoginQuery = """
             select * from users where lower(login) = lower(:login)
             """;
+    }
+
+    @Override
+    public Optional<User> findById(long id) {
+        MapSqlParameterSource params = new MapSqlParameterSource("id", id);
+        List<User> users = jdbcTemplate.query(selectByIdQuery, params, mapper);
+        if (users.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(users.get(0));
     }
 
     @Override

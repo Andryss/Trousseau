@@ -11,6 +11,7 @@ as $$
         join item_categories on item_categories.item_id = items.id
         join categories on item_categories.category_id = categories.id
     where
+        status = 'ACTIVE' and
         (
             q_categories = '{}' or
             categories.name = any(q_categories)
