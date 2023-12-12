@@ -14,6 +14,11 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
+    public List<CategoryWithGroup> findAll() {
+        return categoryRepository.findAll();
+    }
+
+    @Override
     public List<CategoryWithGroup> findAllByItemId(long itemId) {
         return categoryRepository.findAllByItemId(itemId);
     }

@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import ru.itmo.trousseau.model.Dormitory;
 import ru.itmo.trousseau.model.Item;
 import ru.itmo.trousseau.model.User;
-import ru.itmo.trousseau.repository.ItemRepository;
 import ru.itmo.trousseau.service.DormitoryService;
+import ru.itmo.trousseau.service.ItemService;
 import ru.itmo.trousseau.service.UserService;
 
 @Controller
@@ -20,16 +20,20 @@ public class ProfileController {
 
     private final UserService userService;
     private final DormitoryService dormitoryService;
-    private final ItemRepository itemRepository;
+    private final ItemService itemService;
 
     @GetMapping("/profile")
     public String profilePage(Authentication authentication, Model model) {
         User user = userService.findByUsername(authentication.getName());
         Dormitory dormitory = dormitoryService.findById(user.getDormitoryId());
-        List<Item> bookings = itemRepository.findAllBookedBy(user.getId());
+        List<Item> bookings = itemService.findAllBookedBy(user.getId());
+        List<Item> items = itemService.findAllOwnedBy(user.getId());
+        List<Item> savedItems = itemService.findAllSavedBy(user.getId());
         model.addAttribute("user", user);
         model.addAttribute("dormitory", dormitory);
         model.addAttribute("bookings", bookings);
+        model.addAttribute("items", items);
+        model.addAttribute("savedItems", savedItems);
         return "profile";
     }
 }

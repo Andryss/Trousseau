@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Создание объявления</title>
+</head>
+<body>
+    <a th:href="@{/home}">Главная</a>
+    <a th:href="@{/search}">Поиск</a>
+    <a th:href="@{/profile}">Профиль</a>
+    <h2>Новое объявление</h2>
+    <form th:action="@{/items}" method="post">
+        <table>
+            <tr>
+                <td><label th:for="${#ids.next('title')}">Заголовок</label></td>
+                <td><input type="text" minlength="10" maxlength="64"></td>
+            </tr>
+            <tr>
+                <td><label th:for="${#ids.next('photo')}">Фотография</label></td>
+                <td><input type="file" accept="image/jpeg" capture="environment"></td>
+            </tr>
+            <tr>
+                <td><label th:for="${#ids.next('description')}">Описание</label></td>
+                <td><textarea rows="20" cols="30" minlength="20" maxlength="1024"></textarea></td>
+            </tr>
+        </table>
+        <input type="submit" value="Создать">
+    </form>
+</body>
+</html>

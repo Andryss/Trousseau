@@ -9,11 +9,11 @@
     <a th:href="@{/search}">Поиск</a>
     <a th:href="@{/profile}">Профиль</a>
     <h2>Страница поиска</h2>
-    <form th:action="@{/search}" th:object="${searchInfo}" method="get">
+    <form th:action="@{/search}" th:object="${searchRequest}" method="get">
         <input type="text" th:field="*{query}" placeholder="Поиск...">
         <br/>
         <table>
-            <tr th:each="category : ${searchInfo.categories}">
+            <tr th:each="category : ${allCategories}">
                 <td>
                     <input type="checkbox" th:field="*{categories}" th:value="${category.name}"/>
                     <label th:for="${#ids.prev('categories')}" th:text="${category.name}" th:title="${category.description}"></label>
@@ -27,7 +27,7 @@
     </form>
     <br/>
     <th:block th:if="${!#lists.isEmpty(result)}">
-        <table  border="1">
+        <table border="1" width="300">
             <thead>
             <tr><td align="center">Результат</td></tr>
             </thead>
@@ -40,6 +40,18 @@
                     <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300"/>
                     <h4 th:text="${item.title}"></h4>
                     <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
+                    <table style="padding-top: 10px"><tr>
+                        <td>
+                            <form th:action="@{/items/{id}(id=${item.id})}" method="get">
+                                <input type="submit" value="открыть">
+                            </form>
+                        </td>
+                        <td>
+                            <form th:action="@{/items/{id}:bookItem(id=${item.id})}" method="post">
+                                <input type="submit" value="забронировать">
+                            </form>
+                        </td>
+                    </tr></table>
                 </td>
             </tr>
             </tbody>

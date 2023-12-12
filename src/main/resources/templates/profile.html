@@ -44,23 +44,92 @@
         </tbody>
     </table>
     <br/>
-    <table border="1">
-        <thead>
-            <tr><td align="center">Бронирования</td></tr>
-        </thead>
-        <tbody>
-            <tr th:if="${#lists.isEmpty(bookings)}">
-                <td align="center">*пусто*</td>
-            </tr>
-            <tr th:each="item : ${bookings}">
-                <td width="300">
-                    <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300"/>
-                    <h4 th:text="${item.title}"></h4>
-                    <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
-                </td>
-            </tr>
-        </tbody>
+    <table cellspacing="10">
+        <tr style="vertical-align: baseline">
+            <td>
+                <table border="1" width="300">
+                    <thead>
+                    <tr><td align="center">Бронирования</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(bookings)}">
+                        <td align="center">*пусто*</td>
+                    </tr>
+                    <tr th:each="item : ${bookings}">
+                        <td width="300">
+                            <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300"/>
+                            <h4 th:text="${item.title}"></h4>
+                            <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
+                            <table style="padding-top: 10px"><tr>
+                                <td>
+                                    <form th:action="@{/items/{id}(id=${item.id})}" method="get">
+                                        <input type="submit" value="открыть">
+                                    </form>
+                                </td>
+                            </tr></table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <table border="1" width="300">
+                    <thead>
+                    <tr><td align="center">Объявления (<a th:href="@{/items/new}">создать</a>)</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(items)}">
+                        <td align="center">*пусто*</td>
+                    </tr>
+                    <tr th:each="item : ${items}">
+                        <td width="300">
+                            <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300"/>
+                            <h4 th:text="${item.title}"></h4>
+                            <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
+                            <table style="padding-top: 10px"><tr>
+                                <td>
+                                    <form th:action="@{/items/{id}(id=${item.id})}" method="get">
+                                        <input type="submit" value="открыть">
+                                    </form>
+                                </td>
+                                <td>
+                                    <form th:action="@{/items/{id}:closeItem(id=${item.id})}" method="post">
+                                        <input type="submit" value="закрыть">
+                                    </form>
+                                </td>
+                            </tr></table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <table border="1" width="300">
+                    <thead>
+                    <tr><td align="center">Избранное</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(savedItems)}">
+                        <td align="center">*пусто*</td>
+                    </tr>
+                    <tr th:each="item : ${savedItems}">
+                        <td width="300">
+                            <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300"/>
+                            <h4 th:text="${item.title}"></h4>
+                            <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
+                            <table style="padding-top: 10px"><tr>
+                                <td>
+                                    <form th:action="@{/items/{id}(id=${item.id})}" method="get">
+                                        <input type="submit" value="открыть">
+                                    </form>
+                                </td>
+                            </tr></table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
     </table>
-    <br/>
 </body>
 </html>
