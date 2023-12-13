@@ -1,17 +1,25 @@
 package ru.itmo.trousseau.service;
 
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.stereotype.Service;
+import ru.itmo.trousseau.exception.BadRequestException;
 import ru.itmo.trousseau.exception.ForbiddenException;
 import ru.itmo.trousseau.exception.NotFoundException;
+import ru.itmo.trousseau.messages.CreateItemRequest;
 import ru.itmo.trousseau.messages.SearchRequest;
 import ru.itmo.trousseau.model.Item;
+import ru.itmo.trousseau.model.Status;
 import ru.itmo.trousseau.model.User;
+import ru.itmo.trousseau.repository.BookingRepository;
+import ru.itmo.trousseau.repository.CategoryRepository;
 import ru.itmo.trousseau.repository.ItemRepository;
+import ru.itmo.trousseau.repository.PhotoRepository;
 import ru.itmo.trousseau.repository.UserRepository;
 
 @Service
@@ -20,6 +28,9 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+    private final PhotoRepository photoRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public Item findById(long id) {
@@ -49,23 +60,54 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public void bookItem(long itemId, String username) {
-        Optional<User> userOptional = userRepository.findByLoginIgnoreCase(username);
-        User user = userOptional.orElseThrow(() -> new NotFoundException(username));
-        try {
-            itemRepository.bookItem(itemId, user.getId());
-        } catch (UncategorizedSQLException e) {
-            throw new ForbiddenException(String.valueOf(itemId));
+        User user = userRepository.findByLoginIgnoreCase(username).orElseThrow(() -> new NotFoundException(username));
+
+        if (bookingRepository.countByUserId(user.getId()) >= 3) {
+            throw new ForbiddenException("already 3");
         }
+
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException(String.valueOf(itemId)));
+
+        if (item.getStatus() != Status.ACTIVE) {
+            throw new ForbiddenException(item.getStatus().name());
+        }
+        if (item.getUserId().equals(user.getId())) {
+            throw new ForbiddenException("owner");
+        }
+
+        itemRepository.bookItem(itemId, user.getId());
     }
 
     @Override
     public void closeItem(long itemId, String username) {
-        Optional<User> userOptional = userRepository.findByLoginIgnoreCase(username);
-        User user = userOptional.orElseThrow(() -> new NotFoundException(username));
-        try {
-            itemRepository.closeItem(itemId, user.getId());
-        } catch (UncategorizedSQLException e) {
-            throw new ForbiddenException(String.valueOf(itemId));
+        User user = userRepository.findByLoginIgnoreCase(username).orElseThrow(() -> new NotFoundException(username));
+        Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException(String.valueOf(itemId)));
+
+        if (item.getStatus() != Status.BLOCKED) {
+            throw new ForbiddenException(item.getStatus().name());
         }
+        if (!item.getUserId().equals(user.getId())) {
+            throw new ForbiddenException("not owner");
+        }
+
+        itemRepository.closeItem(itemId, user.getId());
+    }
+
+    @Override
+    public void createItem(CreateItemRequest request, String username) {
+        User user = userRepository.findByLoginIgnoreCase(username).orElseThrow(() -> new NotFoundException(username));
+
+        byte[] data;
+        try {
+            data = request.getPhoto().getBytes();
+        } catch (IOException e) {
+            throw new BadRequestException("photo");
+        }
+        long photoId = photoRepository.save(data, Timestamp.from(Instant.now()));
+
+        long itemId = itemRepository.save(request.getTitle(), photoId, request.getDescription(),
+                user.getId(), Timestamp.from(Instant.now()));
+
+        categoryRepository.saveAll(itemId, request.getCategories());
     }
 }

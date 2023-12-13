@@ -6,9 +6,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import ru.itmo.trousseau.controller.validator.CreateItemRequestValidator;
+import ru.itmo.trousseau.messages.CreateItemRequest;
 import ru.itmo.trousseau.model.CategoryWithGroup;
 import ru.itmo.trousseau.model.Dormitory;
 import ru.itmo.trousseau.model.Item;
@@ -21,6 +25,8 @@ import ru.itmo.trousseau.service.UserService;
 @Controller
 @RequiredArgsConstructor
 public class ItemController {
+
+    private final CreateItemRequestValidator createItemRequestValidator;
 
     private final ItemService itemService;
     private final CategoryService categoryService;
@@ -41,8 +47,21 @@ public class ItemController {
     }
 
     @GetMapping("/items/new")
-    public String newItemPage() {
+    public String newItemPage(CreateItemRequest request, Model model) {
+        List<CategoryWithGroup> categories = categoryService.findAll();
+        model.addAttribute("createItem", request);
+        model.addAttribute("allCategories", categories);
         return "item_new";
+    }
+
+    @PostMapping("/items")
+    public String doCreateItem(@Validated CreateItemRequest request, BindingResult bindingResult, Authentication authentication) {
+        createItemRequestValidator.validate(request, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return "redirect:/items/new";
+        }
+        itemService.createItem(request, authentication.getName());
+        return "redirect:/profile";
     }
 
     @PostMapping("/items/{item_id}:bookItem")

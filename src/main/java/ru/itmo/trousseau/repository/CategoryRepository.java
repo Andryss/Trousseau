@@ -7,4 +7,5 @@ import java.util.List;
 public interface CategoryRepository {
     List<CategoryWithGroup> findAll();
     List<CategoryWithGroup> findAllByItemId(long id);
+    void saveAll(long itemId, String[] categories);
 }

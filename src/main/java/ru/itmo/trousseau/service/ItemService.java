@@ -2,6 +2,7 @@ package ru.itmo.trousseau.service;
 
 import java.util.List;
 
+import ru.itmo.trousseau.messages.CreateItemRequest;
 import ru.itmo.trousseau.model.Item;
 import ru.itmo.trousseau.messages.SearchRequest;
 
@@ -13,4 +14,5 @@ public interface ItemService {
     List<Item> findAllWithSearch(SearchRequest search);
     void bookItem(long itemId, String username);
     void closeItem(long itemId, String username);
+    void createItem(CreateItemRequest request, String username);
 }

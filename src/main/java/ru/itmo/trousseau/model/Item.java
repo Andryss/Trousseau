@@ -1,20 +1,24 @@
 package ru.itmo.trousseau.model;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Item {
-    private long id;
+    private Long id;
     private String title;
     @Column(name = "photo_id")
-    private long photoId;
+    private Long photoId;
     private String description;
     private Status status;
     @Column(name = "user_id")
-    private long userId;
+    private Long userId;
     @Column(name = "creation_datetime")
-    private Instant creationDatetime;
+    private Timestamp creationDatetime;
 }

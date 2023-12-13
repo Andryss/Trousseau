@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress HtmlFormInputWithoutLabel -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -9,19 +10,35 @@
     <a th:href="@{/search}">Поиск</a>
     <a th:href="@{/profile}">Профиль</a>
     <h2>Новое объявление</h2>
-    <form th:action="@{/items}" method="post">
+    <form th:action="@{/items}" th:object="${createItem}" method="post" enctype="multipart/form-data">
         <table>
             <tr>
                 <td><label th:for="${#ids.next('title')}">Заголовок</label></td>
-                <td><input type="text" minlength="10" maxlength="64"></td>
+                <td><input type="text" minlength="10" maxlength="64" th:field="*{title}"></td>
             </tr>
             <tr>
                 <td><label th:for="${#ids.next('photo')}">Фотография</label></td>
-                <td><input type="file" accept="image/jpeg" capture="environment"></td>
+                <td><input type="file" accept="image/jpeg" capture="environment" th:field="*{photo}"></td>
             </tr>
             <tr>
                 <td><label th:for="${#ids.next('description')}">Описание</label></td>
-                <td><textarea rows="20" cols="30" minlength="20" maxlength="1024"></textarea></td>
+                <td><textarea rows="20" cols="30" minlength="20" maxlength="1024" th:field="*{description}"></textarea></td>
+            </tr>
+            <tr>
+                <td><label th:for="${#ids.next('categories')}">Категории</label></td>
+                <td>
+                    <table>
+                        <tr th:each="category : ${allCategories}">
+                            <td>
+                                <input type="checkbox" th:field="*{categories}" th:value="${category.name}"/>
+                                <label th:for="${#ids.prev('categories')}" th:text="${category.name}" th:title="${category.description}"></label>
+                            </td>
+                            <td>
+                                <label th:text="${category.groupName}" th:title="${category.groupDescription}"></label>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
         </table>
         <input type="submit" value="Создать">

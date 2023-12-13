@@ -1,10 +1,10 @@
 package ru.itmo.trousseau.repository;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,8 +14,9 @@ import ru.itmo.trousseau.model.Item;
 public class ItemRepositoryImpl implements ItemRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final RowMapper<Item> mapper;
 
+    private final String insertQuery;
+    private final String selectLastIdQuery;
     private final String selectByIdQuery;
     private final String selectBookedByQuery;
     private final String selectOwnedByQuery;
@@ -27,7 +28,13 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     public ItemRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.mapper = new BeanPropertyRowMapper<>(Item.class);
+        this.insertQuery = """
+            insert into items (title, photo_id, description, status, user_id, creation_datetime) values
+                (:title, :photoId, :description, 'ACTIVE', :userId, :creationDatetime)
+            """;
+        this.selectLastIdQuery = """
+            select last_value as id from items_id_seq
+            """;
         this.selectByIdQuery = """
             select * from items where id = :id
             """;
@@ -52,9 +59,22 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
+    public long save(String title, long photoId, String description, long userId, Timestamp creationDatetime) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("title", title);
+        params.addValue("photoId", photoId);
+        params.addValue("description", description);
+        params.addValue("userId", userId);
+        params.addValue("creationDatetime", creationDatetime);
+        jdbcTemplate.update(insertQuery, params);
+        //noinspection DataFlowIssue
+        return jdbcTemplate.queryForObject(selectLastIdQuery, Map.of(), Long.class);
+    }
+
+    @Override
     public Optional<Item> findById(long id) {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        List<Item> items = jdbcTemplate.query(selectByIdQuery, params, mapper);
+        List<Item> items = jdbcTemplate.queryForList(selectByIdQuery, params, Item.class);
         if (items.isEmpty()) {
             return Optional.empty();
         }
@@ -64,19 +84,19 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public List<Item> findAllBookedBy(long userId) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
-        return jdbcTemplate.query(selectBookedByQuery, params, mapper);
+        return jdbcTemplate.queryForList(selectBookedByQuery, params, Item.class);
     }
 
     @Override
     public List<Item> findAllOwnedBy(long userId) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
-        return jdbcTemplate.query(selectOwnedByQuery, params, mapper);
+        return jdbcTemplate.queryForList(selectOwnedByQuery, params, Item.class);
     }
 
     @Override
     public List<Item> findAllSavedBy(long userId) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
-        return jdbcTemplate.query(selectSavedByQuery, params, mapper);
+        return jdbcTemplate.queryForList(selectSavedByQuery, params, Item.class);
     }
 
     @Override
@@ -84,7 +104,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("query", query);
         params.addValue("categories", categories);
-        return jdbcTemplate.query(selectAllBySearchQuery, params, mapper);
+        return jdbcTemplate.queryForList(selectAllBySearchQuery, params, Item.class);
     }
 
     @Override

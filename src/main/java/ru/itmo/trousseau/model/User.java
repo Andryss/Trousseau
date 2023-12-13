@@ -5,11 +5,11 @@ import lombok.Data;
 
 @Data
 public class User {
-    private long id;
+    private Long id;
     private String login;
     private String password;
     private Role role;
     @Column(name = "dormitory_id")
-    private long dormitoryId;
+    private Long dormitoryId;
     private String room;
 }

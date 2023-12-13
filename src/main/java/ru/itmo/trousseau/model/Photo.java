@@ -1,14 +1,18 @@
 package ru.itmo.trousseau.model;
 
-import java.time.Instant;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Column;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Photo {
-    private long id;
+    private Long id;
     private byte[] data;
     @Column(name = "upload_datetime")
-    private Instant uploadDatetime;
+    private Timestamp uploadDatetime;
 }
