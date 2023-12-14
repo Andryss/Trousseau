@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,7 @@ import ru.itmo.trousseau.model.Photo;
 public class PhotoRepositoryImpl implements PhotoRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final RowMapper<Photo> mapper;
 
     private final String insertQuery;
     private final String selectLastIdQuery;
@@ -22,6 +25,7 @@ public class PhotoRepositoryImpl implements PhotoRepository {
 
     public PhotoRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.mapper = new BeanPropertyRowMapper<>(Photo.class);
         this.insertQuery = """
             insert into photos (data, upload_datetime) values (:data, :uploadDatetime)
             """;
@@ -46,7 +50,7 @@ public class PhotoRepositoryImpl implements PhotoRepository {
     @Override
     public Optional<Photo> findById(long id) {
         MapSqlParameterSource params = new MapSqlParameterSource("id", id);
-        List<Photo> dormitories = jdbcTemplate.queryForList(selectByIdQuery, params, Photo.class);
+        List<Photo> dormitories = jdbcTemplate.query(selectByIdQuery, params, mapper);
         if (dormitories.isEmpty()) {
             return Optional.empty();
         }

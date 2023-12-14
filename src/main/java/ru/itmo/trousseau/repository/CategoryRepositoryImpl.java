@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -14,6 +16,7 @@ import ru.itmo.trousseau.model.CategoryWithGroup;
 public class CategoryRepositoryImpl implements CategoryRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
+    private final RowMapper<CategoryWithGroup> mapper;
 
     private final String selectAllQuery;
     private final String insertForItemQuery;
@@ -23,6 +26,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     public CategoryRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        this.mapper = new BeanPropertyRowMapper<>(CategoryWithGroup.class);
         this.selectAllQuery = """
             select * from categories
             """;
@@ -45,13 +49,13 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public List<CategoryWithGroup> findAll() {
-        return jdbcTemplate.queryForList(selectAllWithGroupsQuery, Map.of(), CategoryWithGroup.class);
+        return jdbcTemplate.query(selectAllWithGroupsQuery, Map.of(), mapper);
     }
 
     @Override
     public List<CategoryWithGroup> findAllByItemId(long id) {
         MapSqlParameterSource params = new MapSqlParameterSource("item_id", id);
-        return jdbcTemplate.queryForList(selectAllByItemIdQuery, params, CategoryWithGroup.class);
+        return jdbcTemplate.query(selectAllByItemIdQuery, params, mapper);
     }
 
     @Override
