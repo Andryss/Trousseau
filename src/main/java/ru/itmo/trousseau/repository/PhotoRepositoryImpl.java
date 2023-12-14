@@ -2,7 +2,6 @@ package ru.itmo.trousseau.repository;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -19,7 +18,6 @@ public class PhotoRepositoryImpl implements PhotoRepository {
     private final RowMapper<Photo> mapper;
 
     private final String insertQuery;
-    private final String selectLastIdQuery;
     private final String selectByIdQuery;
 
 
@@ -27,10 +25,7 @@ public class PhotoRepositoryImpl implements PhotoRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = new BeanPropertyRowMapper<>(Photo.class);
         this.insertQuery = """
-            insert into photos (data, upload_datetime) values (:data, :uploadDatetime)
-            """;
-        this.selectLastIdQuery = """
-            select last_value as id from photos_id_seq
+            select * from insert_photo(:data, :uploadDatetime)
             """;
         this.selectByIdQuery = """
             select * from photos where id = :id
@@ -42,9 +37,8 @@ public class PhotoRepositoryImpl implements PhotoRepository {
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("data", data);
         params.addValue("uploadDatetime", uploadDatetime);
-        jdbcTemplate.update(insertQuery, params);
         //noinspection DataFlowIssue
-        return jdbcTemplate.queryForObject(selectLastIdQuery, Map.of(), Long.class);
+        return jdbcTemplate.queryForObject(insertQuery, params, Long.class);
     }
 
     @Override

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress HtmlFormInputWithoutLabel, HtmlDeprecatedAttribute, HtmlRequiredAltAttribute, RequiredAttributes -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -37,7 +38,7 @@
             </tr>
             <tr th:each="item : ${result}">
                 <td width="300">
-                    <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300"/>
+                    <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300" height="300"/>
                     <h4 th:text="${item.title}"></h4>
                     <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
                     <table style="padding-top: 10px"><tr>
@@ -48,7 +49,12 @@
                         </td>
                         <td>
                             <form th:action="@{/items/{id}:bookItem(id=${item.id})}" method="post">
-                                <input type="submit" value="забронировать">
+                                <input type="submit" value="захотеть">
+                            </form>
+                        </td>
+                        <td>
+                            <form th:action="@{/items/{id}:save(id=${item.id})}" method="post">
+                                <input type="submit" value="мечтать">
                             </form>
                         </td>
                     </tr></table>

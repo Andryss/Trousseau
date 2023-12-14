@@ -63,7 +63,7 @@ insert into bookings (user_id, item_id, booking_datetime) values
 insert into saved_items (user_id, item_id, added_datetime) values
     (4, 3, '2023-09-03 15:00'),
     (4, 4, '2023-09-03 15:05'),
-    (2, 3, '2023-09-03 13:25'),
+    (3, 4, '2023-09-03 15:25'),
     (4, 5, '2023-09-04 15:05');
 
 insert into subscriptions (user_id, name, created_datetime) values

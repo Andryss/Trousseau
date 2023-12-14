@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress HtmlRequiredAltAttribute, RequiredAttributes, HtmlDeprecatedAttribute -->
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +11,7 @@
     <a th:href="@{/profile}">Профиль</a>
     <div th:width="600">
         <h2 th:text="${item.title}"></h2>
-        <img th:src="@{/photos/{id}(id=${item.photoId})}" width="600"/>
+        <img th:src="@{/photos/{id}(id=${item.photoId})}" width="600" height="600"/>
         <p th:text="${item.description}"></p>
         <table border="1">
             <thead>

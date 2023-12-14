@@ -2,7 +2,6 @@ package ru.itmo.trousseau.repository;
 
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -19,46 +18,25 @@ public class ItemRepositoryImpl implements ItemRepository {
     private final RowMapper<Item> mapper;
 
     private final String insertQuery;
-    private final String selectLastIdQuery;
     private final String selectByIdQuery;
-    private final String selectBookedByQuery;
     private final String selectOwnedByQuery;
     private final String selectAllBySearchQuery;
-    private final String selectSavedByQuery;
-    private final String bookItemQuery;
-    private final String closeItemQuery;
 
 
     public ItemRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = new BeanPropertyRowMapper<>(Item.class);
         this.insertQuery = """
-            insert into items (title, photo_id, description, status, user_id, creation_datetime) values
-                (:title, :photoId, :description, 'ACTIVE', :userId, :creationDatetime)
-            """;
-        this.selectLastIdQuery = """
-            select last_value as id from items_id_seq
+            select * from insert_item(:title, :photoId, :description, 'ACTIVE', :userId, :creationDatetime)
             """;
         this.selectByIdQuery = """
             select * from items where id = :id
-            """;
-        this.selectBookedByQuery = """
-            select * from find_booked_items(:userId)
             """;
         this.selectOwnedByQuery = """
             select * from items where user_id = :userId
             """;
         this.selectAllBySearchQuery = """
             select * from find_items(:query, :categories)
-            """;
-        this.selectSavedByQuery = """
-            select * from find_saved_items(:userId)
-            """;
-        this.bookItemQuery = """
-            call book_item(:id, :userId)
-            """;
-        this.closeItemQuery = """
-            call close_item(:id, :userId)
             """;
     }
 
@@ -70,9 +48,8 @@ public class ItemRepositoryImpl implements ItemRepository {
         params.addValue("description", description);
         params.addValue("userId", userId);
         params.addValue("creationDatetime", creationDatetime);
-        jdbcTemplate.update(insertQuery, params);
         //noinspection DataFlowIssue
-        return jdbcTemplate.queryForObject(selectLastIdQuery, Map.of(), Long.class);
+        return jdbcTemplate.queryForObject(insertQuery, params, Long.class);
     }
 
     @Override
@@ -86,21 +63,9 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public List<Item> findAllBookedBy(long userId) {
-        MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
-        return jdbcTemplate.query(selectBookedByQuery, params, mapper);
-    }
-
-    @Override
-    public List<Item> findAllOwnedBy(long userId) {
+    public List<Item> findAllByUserId(long userId) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
         return jdbcTemplate.query(selectOwnedByQuery, params, mapper);
-    }
-
-    @Override
-    public List<Item> findAllSavedBy(long userId) {
-        MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
-        return jdbcTemplate.query(selectSavedByQuery, params, mapper);
     }
 
     @Override
@@ -109,21 +74,5 @@ public class ItemRepositoryImpl implements ItemRepository {
         params.addValue("query", query);
         params.addValue("categories", categories);
         return jdbcTemplate.query(selectAllBySearchQuery, params, mapper);
-    }
-
-    @Override
-    public void bookItem(long id, long userId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
-        params.addValue("userId", userId);
-        jdbcTemplate.update(bookItemQuery, params);
-    }
-
-    @Override
-    public void closeItem(long id, long userId) {
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", id);
-        params.addValue("userId", userId);
-        jdbcTemplate.update(closeItemQuery, params);
     }
 }
