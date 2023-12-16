@@ -19,12 +19,16 @@ public class CreateItemRequestValidator implements Validator {
     public void validate(@NonNull Object target, @NonNull Errors errors) {
         CreateItemRequest request = (CreateItemRequest) target;
         MultipartFile photo = request.getPhoto();
+        if (photo == null || photo.isEmpty()) {
+            errors.rejectValue("photo", "", "фотография должна быть прикреплена");
+            return;
+        }
         if (!"image/jpeg".equals(photo.getContentType())) {
-            errors.rejectValue("photo", "supports only image/jpeg");
+            errors.rejectValue("photo", "", "поддерживается только формат image/jpeg");
             return;
         }
         if (photo.getSize() > 3 * 1024 * 1024) {
-            errors.rejectValue("photo", "photo must has maximum 3mb size");
+            errors.rejectValue("photo", "", "максимальный размер фотографии 3мб");
         }
     }
 }

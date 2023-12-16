@@ -34,7 +34,7 @@ create or replace function insert_photo(q_data bytea, q_upload_datetime timestam
 as $$
     declare new_id bigint;
     begin
-        select nextval(photos_id_seq) into new_id;
+        select nextval('photos_id_seq') into new_id;
         insert into photos values (new_id, q_data, q_upload_datetime);
         return new_id;
     end;
@@ -47,7 +47,7 @@ create or replace function insert_item(q_title varchar(64), q_photo_id bigint, q
 as $$
     declare new_id bigint;
     begin
-        select nextval(items_id_seq) into new_id;
+        select nextval('items_id_seq') into new_id;
         insert into items values (new_id, q_title, q_photo_id, q_description, 'ACTIVE', q_user_id, q_creation_datetime);
         return new_id;
     end;
@@ -136,6 +136,18 @@ $$;
 
 
 -- 8. создание подписки == insert
+
+create or replace function insert_subscription(q_user_id bigint, q_name varchar(64), q_creation_datetime timestamp)
+    returns bigint
+    language plpgsql
+as $$
+    declare new_id bigint;
+    begin
+        select nextval('subscriptions_id_seq') into new_id;
+        insert into subscriptions values (new_id, q_user_id, q_name, q_creation_datetime);
+        return new_id;
+    end;
+$$;
 
 
 -- 9. получение подписок пользователя

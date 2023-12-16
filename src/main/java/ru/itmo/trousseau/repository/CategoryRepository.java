@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface CategoryRepository {
     List<CategoryWithGroup> findAll();
-    List<CategoryWithGroup> findAllByItemId(long id);
+    List<CategoryWithGroup> findAllByItemId(long itemId);
+    List<CategoryWithGroup> findAllBySubscriptionId(long subId);
 
-    void saveAll(long itemId, String[] categories);
+    void saveAllForItem(long itemId, String[] categories);
+    void saveAllForSubscription(long subId, String[] categories);
 }

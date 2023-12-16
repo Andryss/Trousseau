@@ -72,7 +72,7 @@ create table subscriptions (
     id bigserial primary key,
     user_id bigserial references users(id) not null,
     name varchar(64) not null,
-    created_datetime timestamp not null
+    creation_datetime timestamp not null
 );
 
 -- вспомогательные таблицы

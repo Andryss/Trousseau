@@ -51,20 +51,21 @@ public class ItemController {
     }
 
     @GetMapping("/items/new")
-    public String newItemPage(CreateItemRequest request, Model model) {
+    public String newItemPage(CreateItemRequest createItemRequest, Model model) {
         List<CategoryWithGroup> categories = categoryService.findAll();
-        model.addAttribute("createItem", request);
+        model.addAttribute("createItemRequest", createItemRequest);
         model.addAttribute("allCategories", categories);
         return "item_new";
     }
 
     @PostMapping("/items/new")
-    public String doCreateItem(@Valid CreateItemRequest request, BindingResult bindingResult, Authentication authentication) {
-        createItemRequestValidator.validate(request, bindingResult);
+    public String doCreateItem(@Valid CreateItemRequest createItemRequest, BindingResult bindingResult, Authentication authentication, Model model) {
+        createItemRequestValidator.validate(createItemRequest, bindingResult);
         if (bindingResult.hasErrors()) {
+            model.addAttribute("allCategories", categoryService.findAll());
             return "item_new";
         }
-        itemService.createItem(request, authentication.getName());
+        itemService.createItem(createItemRequest, authentication.getName());
         return "redirect:/profile";
     }
 

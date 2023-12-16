@@ -59,6 +59,6 @@ public class ItemServiceImpl implements ItemService {
         long itemId = itemRepository.save(request.getTitle(), photoId, request.getDescription(),
                 user.getId(), Timestamp.from(Instant.now()));
 
-        categoryRepository.saveAll(itemId, request.getCategories());
+        categoryRepository.saveAllForItem(itemId, request.getCategories());
     }
 }

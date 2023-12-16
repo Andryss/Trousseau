@@ -152,6 +152,42 @@
                     </tbody>
                 </table>
             </td>
+            <td>
+                <table border="1" width="300">
+                    <thead>
+                    <tr><td align="center">Подписки (<a th:href="@{/subscriptions/new}">создать</a>)</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(subscriptions)}">
+                        <td align="center">*пусто*</td>
+                    </tr>
+                    <tr th:each="subscription : ${subscriptions}">
+                        <td>
+                            <table border="1">
+                                <tr>
+                                    <td><label th:text="${subscription.name}"></label></td>
+                                </tr>
+                                <tr>
+                                    <td><label th:text="${subscription.creationDatetime}"></label></td>
+                                </tr>
+                                <tr><td>
+                                    <table>
+                                        <tr th:each="category : ${subscription.categories}">
+                                            <td>
+                                                <label th:text="${category.name}" th:title="${category.description}"></label>
+                                            </td>
+                                            <td>
+                                                <label th:text="${category.groupName}" th:title="${category.groupDescription}"></label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
         </tr>
     </table>
 </body>

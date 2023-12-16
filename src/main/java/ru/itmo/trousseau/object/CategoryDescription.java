@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class SearchCategory {
+public class CategoryDescription {
     private String name;
     private String description;
     private String groupName;

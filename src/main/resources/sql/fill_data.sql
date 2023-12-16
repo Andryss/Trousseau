@@ -66,7 +66,7 @@ insert into saved_items (user_id, item_id, added_datetime) values
     (3, 4, '2023-09-03 15:25'),
     (4, 5, '2023-09-04 15:05');
 
-insert into subscriptions (user_id, name, created_datetime) values
+insert into subscriptions (user_id, name, creation_datetime) values
     (4, 'Хочу гель или мыло для душа', '2023-09-01 15:10'),
     (4, 'Ищу что бы надеть', '2023-09-01 15:30'),
     (3, 'Что-нибудь на замену волко-трусам', '2023-09-03 16:30');
