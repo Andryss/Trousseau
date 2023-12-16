@@ -27,7 +27,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         this.jdbcTemplate = jdbcTemplate;
         this.mapper = new BeanPropertyRowMapper<>(Item.class);
         this.insertQuery = """
-            select * from insert_item(:title, :photoId, :description, 'ACTIVE', :userId, :creationDatetime)
+            select * from insert_item(:title, :photoId, :description, :userId, :creationDatetime)
             """;
         this.selectByIdQuery = """
             select * from items where id = :id

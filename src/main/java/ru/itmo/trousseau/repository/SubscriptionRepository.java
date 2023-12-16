@@ -9,4 +9,5 @@ public interface SubscriptionRepository {
     long save(long userId, String name, Timestamp creationDatetime);
 
     List<Subscription> findAllByUserId(long userId);
+    List<Subscription> findAllByCategoriesIn(String[] categories);
 }

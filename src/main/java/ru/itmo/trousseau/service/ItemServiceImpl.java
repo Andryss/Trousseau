@@ -13,20 +13,25 @@ import ru.itmo.trousseau.exception.NotFoundException;
 import ru.itmo.trousseau.messages.CreateItemRequest;
 import ru.itmo.trousseau.messages.SearchRequest;
 import ru.itmo.trousseau.model.Item;
+import ru.itmo.trousseau.model.Subscription;
 import ru.itmo.trousseau.model.User;
 import ru.itmo.trousseau.repository.CategoryRepository;
 import ru.itmo.trousseau.repository.ItemRepository;
 import ru.itmo.trousseau.repository.PhotoRepository;
+import ru.itmo.trousseau.repository.SubscriptionRepository;
 import ru.itmo.trousseau.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
 
+    private final NotificationService notificationService;
+
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final PhotoRepository photoRepository;
     private final CategoryRepository categoryRepository;
+    private final SubscriptionRepository subscriptionRepository;
 
     @Override
     public Item findById(long id) {
@@ -60,5 +65,9 @@ public class ItemServiceImpl implements ItemService {
                 user.getId(), Timestamp.from(Instant.now()));
 
         categoryRepository.saveAllForItem(itemId, request.getCategories());
+
+        List<Subscription> subs = subscriptionRepository.findAllByCategoriesIn(request.getCategories());
+        Item item = itemRepository.findById(itemId).orElseThrow();
+        subs.forEach(subscription -> notificationService.notify(subscription, item));
     }
 }

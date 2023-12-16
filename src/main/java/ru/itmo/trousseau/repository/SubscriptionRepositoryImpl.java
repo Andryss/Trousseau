@@ -18,6 +18,7 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
 
     private final String insertQuery;
     private final String selectByUserIdQuery;
+    private final String selectByCategoriesQuery;
 
 
     public SubscriptionRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
@@ -28,6 +29,9 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
             """;
         this.selectByUserIdQuery = """
             select * from find_subscriptions(:userId)
+            """;
+        this.selectByCategoriesQuery = """
+            select * from find_covering_subscriptions(:categories)
             """;
     }
 
@@ -45,5 +49,11 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
     public List<Subscription> findAllByUserId(long userId) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
         return jdbcTemplate.query(selectByUserIdQuery, params, mapper);
+    }
+
+    @Override
+    public List<Subscription> findAllByCategoriesIn(String[] categories) {
+        MapSqlParameterSource params = new MapSqlParameterSource("categories", categories);
+        return jdbcTemplate.query(selectByCategoriesQuery, params, mapper);
     }
 }

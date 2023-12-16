@@ -41,7 +41,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
             insert into subscription_categories values (:subId, :categoryId)
             """;
         this.selectAllWithGroupsQuery = """
-            select categories.id, categories.name, categories.description,
+            select categories.id, categories.name, categories.description, category_groups.id as group_id,
                 category_groups.name as group_name, category_groups.description as group_description
             from categories join category_groups on categories.group_id = category_groups.id
             """;

@@ -11,7 +11,7 @@ as $$
         join item_categories on item_categories.item_id = items.id
         join categories on item_categories.category_id = categories.id
     where
-        status = 'ACTIVE' and
+        status = 'PUBLISHED' and
         (
             q_categories = '{}' or
             categories.name = any(q_categories)
@@ -48,7 +48,9 @@ as $$
     declare new_id bigint;
     begin
         select nextval('items_id_seq') into new_id;
-        insert into items values (new_id, q_title, q_photo_id, q_description, 'ACTIVE', q_user_id, q_creation_datetime);
+        insert into items values (new_id, q_title, q_photo_id, q_description, 'PUBLISHED', q_user_id, q_creation_datetime);
+        insert into item_status_history (item_id, old_status, new_status, change_datetime, change_user_id)
+            values (new_id, 'NEW', 'PUBLISHED', q_creation_datetime, q_user_id);
         return new_id;
     end;
 $$;
@@ -62,8 +64,8 @@ as $$
     declare cur_status varchar(16); cur_user_id bigint; timestamp timestamp;
     begin
         select status, user_id from items where id = q_item_id into cur_status, cur_user_id;
-        if cur_status != 'ACTIVE' then
-            raise exception 'item % must be ACTIVE to book it', q_item_id;
+        if cur_status != 'PUBLISHED' then
+            raise exception 'item % must be PUBLISHED to book it', q_item_id;
         end if;
         if cur_user_id = q_user_id then
             raise exception 'user % cannot book his own item %', q_user_id, q_item_id;
@@ -71,7 +73,7 @@ as $$
         select now() into timestamp;
         update items set status = 'BLOCKED' where id = q_item_id;
         insert into item_status_history (item_id, old_status, new_status, change_datetime, change_user_id)
-            values (q_item_id, 'ACTIVE', 'BLOCKED', timestamp, q_user_id);
+            values (q_item_id, 'PUBLISHED', 'BLOCKED', timestamp, q_user_id);
         insert into bookings (user_id, item_id, booking_datetime)
             values (q_user_id, q_item_id, timestamp);
     end;
@@ -182,9 +184,28 @@ begin
     if cur_user_id != q_user_id and cur_booked_user_id != q_user_id then
         raise exception 'user % can cancel only his own bookings', q_user_id;
     end if;
-    update items set status = 'ACTIVE' where id = q_item_id;
+    update items set status = 'PUBLISHED' where id = q_item_id;
     insert into item_status_history (item_id, old_status, new_status, change_datetime, change_user_id)
-    values (q_item_id, cur_status, 'ACTIVE', now(), q_user_id);
+    values (q_item_id, cur_status, 'PUBLISHED', now(), q_user_id);
     delete from bookings where item_id = q_item_id;
 end;
+$$;
+
+
+-- МЕТА. получение сработанных подписок
+
+create or replace function find_covering_subscriptions(q_categories text[])
+    returns setof subscriptions
+    language sql
+as $$
+    select
+        subscriptions
+    from
+        subscriptions
+        join subscription_categories on subscription_categories.subscription_id = subscriptions.id
+        join categories on subscription_categories.category_id = categories.id
+    where
+        categories.name = any(q_categories)
+    group by
+        subscriptions.id
 $$;

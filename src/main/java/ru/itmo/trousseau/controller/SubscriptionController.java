@@ -1,7 +1,5 @@
 package ru.itmo.trousseau.controller;
 
-import java.util.List;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -11,7 +9,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.itmo.trousseau.messages.CreateSubscriptionRequest;
-import ru.itmo.trousseau.model.CategoryWithGroup;
 import ru.itmo.trousseau.service.CategoryService;
 import ru.itmo.trousseau.service.SubscriptionService;
 
@@ -24,9 +21,8 @@ public class SubscriptionController {
 
     @GetMapping("/subscriptions/new")
     public String newSubscriptionPage(CreateSubscriptionRequest createSubscriptionRequest, Model model) {
-        List<CategoryWithGroup> categories = categoryService.findAll();
         model.addAttribute("createSubscriptionRequest", createSubscriptionRequest);
-        model.addAttribute("allCategories", categories);
+        model.addAttribute("allCategories", categoryService.findAll());
         return "subscription_new";
     }
 

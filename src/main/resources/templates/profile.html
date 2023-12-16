@@ -136,7 +136,7 @@
                                         <input type="submit" value="открыть">
                                     </form>
                                 </td>
-                                <td th:if="${#strings.equals(item.status, 'ACTIVE')}">
+                                <td th:if="${#strings.equals(item.status, 'PUBLISHED')}">
                                     <form th:action="@{/items/{id}:bookItem(id=${item.id})}" method="post">
                                         <input type="submit" value="захотеть">
                                     </form>

@@ -38,7 +38,7 @@ public class BookingServiceImpl implements BookingService {
         if (bookingRepository.countByUserId(user.getId()) >= 3) {
             throw new ConflictException("already 3");
         }
-        if (item.getStatus() != Status.ACTIVE) {
+        if (item.getStatus() != Status.PUBLISHED) {
             throw new ConflictException(item.getStatus().name());
         }
 

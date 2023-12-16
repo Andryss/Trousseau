@@ -52,9 +52,8 @@ public class ItemController {
 
     @GetMapping("/items/new")
     public String newItemPage(CreateItemRequest createItemRequest, Model model) {
-        List<CategoryWithGroup> categories = categoryService.findAll();
         model.addAttribute("createItemRequest", createItemRequest);
-        model.addAttribute("allCategories", categories);
+        model.addAttribute("allCategories", categoryService.findAll());
         return "item_new";
     }
 

@@ -13,17 +13,23 @@
     <form th:action="@{/search}" th:object="${searchRequest}" method="get">
         <input type="text" th:field="*{query}" placeholder="Поиск...">
         <br/>
-        <table>
-            <tr th:each="category : ${allCategories}">
-                <td>
-                    <input type="checkbox" th:field="*{categories}" th:value="${category.name}"/>
-                    <label th:for="${#ids.prev('categories')}" th:text="${category.name}" th:title="${category.description}"></label>
-                </td>
-                <td>
-                    <label th:text="${category.groupName}" th:title="${category.groupDescription}"></label>
-                </td>
-            </tr>
-        </table>
+        <table><tr style="vertical-align: baseline">
+            <td th:each="group : ${allCategories}">
+                <table>
+                    <thead><tr><td>
+                        <label th:text="${group.name}" th:title="${group.description}"></label>
+                    </td></tr></thead>
+                    <tbody>
+                        <tr th:each="category : ${group.categories}">
+                            <td>
+                                <input type="checkbox" th:field="*{categories}" th:value="${category.name}"/>
+                                <label th:for="${#ids.prev('categories')}" th:text="${category.name}" th:title="${category.description}"></label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr></table>
         <input type="submit" value="Поиск">
     </form>
     <br/>

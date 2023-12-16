@@ -1,7 +1,8 @@
 package ru.itmo.trousseau.model;
 
 public enum Status {
-    ACTIVE,
+    NEW,
+    PUBLISHED,
     BLOCKED,
     ARCHIVED
 }
