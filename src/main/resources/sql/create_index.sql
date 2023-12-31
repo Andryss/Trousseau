@@ -1,10 +1,8 @@
-create extension if not exists pg_trgm;
+create index if not exists items_title_trgm on items using gin(to_tsvector('russian', title));
 
-create index if not exists items_title_trgm on items using gin(title gin_trgm_ops);
+create index if not exists items_description_trgm on items using gin(to_tsvector('russian', description));
 
-create index if not exists items_description_trgm on items using gin(description gin_trgm_ops);
-
-create index if not exists categories_name_trgm on categories using gin(name gin_trgm_ops);
+create index if not exists categories_name_trgm on categories using gin(to_tsvector('russian', name));
 
 create index if not exists bookings_user_id_hash on bookings using hash(user_id);
 
