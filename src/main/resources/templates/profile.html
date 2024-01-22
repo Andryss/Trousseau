@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<!--suppress HtmlDeprecatedAttribute, HtmlRequiredAltAttribute, RequiredAttributes -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль</title>
+</head>
+<body>
+    <a th:href="@{/home}">Главная</a>
+    <a th:href="@{/search}">Поиск</a>
+    <a th:href="@{/profile}">Профиль</a>
+    <h2>Страница профиля</h2>
+    <table border="1">
+        <thead>
+            <tr><td colspan="2" align="center">Профиль (<a th:href="@{/logout}">выйти</a>)</td></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Имя пользователя</td>
+                <td th:text="${user.login}"></td>
+            </tr>
+            <tr>
+                <td>Роль</td>
+                <td th:text="${user.role}"></td>
+            </tr>
+            <tr>
+                <td>Общежитие</td>
+                <td>
+                    <table border="1">
+                        <tr>
+                            <td>Название</td>
+                            <td th:text="${dormitory.name}"></td>
+                        </tr>
+                        <tr>
+                            <td>Адрес</td>
+                            <td th:text="${dormitory.address}"></td>
+                        </tr>
+                        <tr>
+                            <td>Комната</td>
+                            <td th:text="${user.room}"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <table cellspacing="10">
+        <tr style="vertical-align: baseline">
+            <td>
+                <table border="1" width="300">
+                    <thead>
+                    <tr><td align="center">Бронирования</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(bookings)}">
+                        <td align="center">*пусто*</td>
+                    </tr>
+                    <tr th:each="item : ${bookings}">
+                        <td width="300">
+                            <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300" height="300"/>
+                            <h4 th:text="${item.title}"></h4>
+                            <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
+                            <table style="padding-top: 10px"><tr>
+                                <td>
+                                    <form th:action="@{/items/{id}(id=${item.id})}" method="get">
+                                        <input type="submit" value="открыть">
+                                    </form>
+                                </td>
+                                <td>
+                                    <form th:action="@{/items/{id}:cancelBooking(id=${item.id})}" method="post">
+                                        <input type="submit" value="расхотеть">
+                                    </form>
+                                </td>
+                            </tr></table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <table border="1" width="300">
+                    <thead>
+                    <tr><td align="center">Объявления (<a th:href="@{/items/new}">создать</a>)</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(items)}">
+                        <td align="center">*пусто*</td>
+                    </tr>
+                    <tr th:each="item : ${items}">
+                        <td width="300">
+                            <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300" height="300"/>
+                            <h4 th:text="${item.title}"></h4>
+                            <p th:text="${#strings.abbreviate(item.description, 100)}"></p>
+                            <p th:text="${item.status}"></p>
+                            <table><tr>
+                                <td>
+                                    <form th:action="@{/items/{id}(id=${item.id})}" method="get">
+                                        <input type="submit" value="открыть">
+                                    </form>
+                                </td>
+                                <td th:if="${#strings.equals(item.status, 'BLOCKED')}">
+                                    <form th:action="@{/items/{id}:closeItem(id=${item.id})}" method="post">
+                                        <input type="submit" value="закрыть">
+                                    </form>
+                                </td>
+                                <td th:if="${#strings.equals(item.status, 'BLOCKED')}">
+                                    <form th:action="@{/items/{id}:cancelBooking(id=${item.id})}" method="post">
+                                        <input type="submit" value="снять">
+                                    </form>
+                                </td>
+                            </tr></table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <table border="1" width="300">
+                    <thead>
+                    <tr><td align="center">Избранное</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(savedItems)}">
+                        <td align="center">*пусто*</td>
+                    </tr>
+                    <tr th:each="item : ${savedItems}">
+                        <td width="300">
+                            <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300" height="300"/>
+                            <h4 th:text="${item.title}"></h4>
+                            <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
+                            <p th:text="${item.status}"></p>
+                            <table style="padding-top: 10px"><tr>
+                                <td>
+                                    <form th:action="@{/items/{id}(id=${item.id})}" method="get">
+                                        <input type="submit" value="открыть">
+                                    </form>
+                                </td>
+                                <td th:if="${#strings.equals(item.status, 'PUBLISHED')}">
+                                    <form th:action="@{/items/{id}:bookItem(id=${item.id})}" method="post">
+                                        <input type="submit" value="захотеть">
+                                    </form>
+                                </td>
+                                <td>
+                                    <form th:action="@{/items/{id}:unsave(id=${item.id})}" method="post">
+                                        <input type="submit" value="размечтать">
+                                    </form>
+                                </td>
+                            </tr></table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+            <td>
+                <table border="1" width="300">
+                    <thead>
+                    <tr><td align="center">Подписки (<a th:href="@{/subscriptions/new}">создать</a>)</td></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:if="${#lists.isEmpty(subscriptions)}">
+                        <td align="center">*пусто*</td>
+                    </tr>
+                    <tr th:each="subscription : ${subscriptions}">
+                        <td>
+                            <table border="1">
+                                <tr>
+                                    <td><label th:text="${subscription.name}"></label></td>
+                                </tr>
+                                <tr>
+                                    <td><label th:text="${subscription.creationDatetime}"></label></td>
+                                </tr>
+                                <tr><td>
+                                    <table>
+                                        <tr th:each="category : ${subscription.categories}">
+                                            <td>
+                                                <label th:text="${category.name}" th:title="${category.description}"></label>
+                                            </td>
+                                            <td>
+                                                <label th:text="${category.groupName}" th:title="${category.groupDescription}"></label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td></tr>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

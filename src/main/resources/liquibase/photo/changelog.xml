@@ -1,0 +1,30 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd">
+
+    <changeSet id="1" author="prepare">
+        <insert tableName="photos">
+            <column name="data" type="bytea" valueBlobFile="./img/1.jpg"/>
+            <column name="upload_datetime" type="timestamp" valueDate="2023-09-01T10:00:00"/>
+        </insert>
+        <insert tableName="photos">
+            <column name="data" type="bytea" valueBlobFile="./img/2.jpg"/>
+            <column name="upload_datetime" type="timestamp" valueDate="2023-09-01T10:30:00"/>
+        </insert>
+        <insert tableName="photos">
+            <column name="data" type="bytea" valueBlobFile="./img/3.jpg"/>
+            <column name="upload_datetime" type="timestamp" valueDate="2023-09-02T13:00:00"/>
+        </insert>
+        <insert tableName="photos">
+            <column name="data" type="bytea" valueBlobFile="./img/4.jpg"/>
+            <column name="upload_datetime" type="timestamp" valueDate="2023-09-03T15:00:00"/>
+        </insert>
+        <insert tableName="photos">
+            <column name="data" type="bytea" valueBlobFile="./img/5.jpg"/>
+            <column name="upload_datetime" type="timestamp" valueDate="2023-09-03T16:00:00"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

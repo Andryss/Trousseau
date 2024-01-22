@@ -5,23 +5,10 @@ insert into dormitories (name, address) values
     ('Общежитие №4', 'Санкт-Петербург, ул. Белорусская, д. 6, лит. А');
 
 insert into users (login, password, role, dormitory_id, room) values
-    ('admin', 'password-hash', 'ADMIN', 1, '101'),
-    ('user1', 'password-hash', 'USER', 1, '205'),
-    ('user2', 'password-hash', 'USER', 1, '803'),
-    ('user3', 'password-hash', 'USER', 1, '203');
-
-create function rel2abs(rel text) returns text as $$
-  select '/Users/andryssssss/Programming/Projects/Java/ITMO/Trousseau/src/main/resources/sql/' || rel;
-$$ language sql;
-
-insert into photos (data, upload_datetime, upload_user_id) values
-    (pg_read_binary_file(rel2abs('img/1.jpg')), '2023-09-01 10:00', 2),
-    (pg_read_binary_file(rel2abs('img/2.jpg')), '2023-09-01 10:30', 2),
-    (pg_read_binary_file(rel2abs('img/3.jpg')), '2023-09-02 13:00', 2),
-    (pg_read_binary_file(rel2abs('img/4.jpg')), '2023-09-03 15:00', 3),
-    (pg_read_binary_file(rel2abs('img/5.jpg')), '2023-09-03 16:00', 3);
-
-drop function if exists rel2abs;
+    ('admin', '$2a$10$2UsL3aOQ2v7h7mIQ2URGtuuhn0j/yP4LLPFQmpow0juBxeXR6.3ve', 'ADMIN', 1, '101'),
+    ('user1', '$2a$10$l.XoDylw4IgQamW0AjK1AuiSeEvhozu1KIzvcZjiaUT5MgbpV5Cyy', 'USER', 1, '205'),
+    ('user2', '$2a$10$aoLJCX0d0fWUZRjeQQYOJetu2NHq1iuyMs201kYZAUzAgALzL2kSC', 'USER', 1, '803'),
+    ('user3', '$2a$10$JHnLUvRlUL.uDIe7mbr1duFtjzbS0v5d1/3Owm1tBm2u3ycvhYdQq', 'USER', 1, '203');
 
 insert into category_groups (name, description) values
     ('Мебель', 'Включает в себя все виды предметов интерьера, предназначенных для обеспечения комфорта и функциональности жилого пространства'),
@@ -56,19 +43,19 @@ insert into categories (name, description, group_id) values
     ('Другое', 'Все, что не подошло под другие категории', 6);
 
 insert into items (title, photo_id, description, status, user_id, creation_datetime) values
-    ('Провод переходник USB/Type-C', 1, 'Новый переходник USB-Type s', 'ACTIVE', 2, '2023-09-01 10:20'),
-    ('Стул ортопедический на колесиках', 2, 'ПРОДАЮ Ортопедический стул для правильной осанки .Вы будете сидеть на нем только в анатомически верном положении.За счет наклонного сидения и подставки для ног снижается нагрузка на позвоночник. Когда Вы сядете на этот стул, то Вы не сможете сутулиться или закинуть ногу на ногу. Состояние рабочее все узлы в порядке. В РАЗОБРАННОМ ВИДЕ В СУМКЕ. САМОВЫВОЗ С 11-22 ч.', 'ACTIVE', 2, '2023-09-01 10:50'),
+    ('Провод переходник USB/Type-C', 1, 'Новый переходник USB-Type s', 'PUBLISHED', 2, '2023-09-01 10:20'),
+    ('Стул ортопедический на колесиках', 2, 'ПРОДАЮ Ортопедический стул для правильной осанки .Вы будете сидеть на нем только в анатомически верном положении.За счет наклонного сидения и подставки для ног снижается нагрузка на позвоночник. Когда Вы сядете на этот стул, то Вы не сможете сутулиться или закинуть ногу на ногу. Состояние рабочее все узлы в порядке. В РАЗОБРАННОМ ВИДЕ В СУМКЕ. САМОВЫВОЗ С 11-22 ч.', 'PUBLISHED', 2, '2023-09-01 10:50'),
     ('Набор шампуней и гелей для душа', 3, 'Продам bvlgari 40 ml,набор( шампунь и гель для душа) по 600 р набор (цена от 3 наборов) и hermes 40 ml 200 руб. Цена на эбэй последняя фото . Осталось 20 наборов ( 60 шт.) 20 наборов со скидкой!! Цена за все по 150 р', 'BLOCKED', 2, '2023-09-02 13:20'),
-    ('Шапка-ушанка', 4, 'Продам шапки -ушанки вязаные. Ручной работы. Тренд сезона. Состав 70% акрила 30% шерсти.Очень мягкие и приятные в носке. Размер 53 - 58.', 'ACTIVE', 3, '2023-09-03 15:20'),
-    ('Трусы с волком', 5, 'Мужские боксеры созданы из 100% хлопок привезенного из США, с внутренней подкладкой для комфорта, Ручная работа , размеры M,L', 'ACTIVE', 3, '2023-09-03 16:20');
+    ('Шапка-ушанка', 4, 'Продам шапки -ушанки вязаные. Ручной работы. Тренд сезона. Состав 70% акрила 30% шерсти.Очень мягкие и приятные в носке. Размер 53 - 58.', 'PUBLISHED', 3, '2023-09-03 15:20'),
+    ('Трусы с волком', 5, 'Мужские боксеры созданы из 100% хлопок привезенного из США, с внутренней подкладкой для комфорта, Ручная работа , размеры M,L', 'PUBLISHED', 3, '2023-09-03 16:20');
 
 insert into item_status_history (item_id, old_status, new_status, change_datetime, change_user_id) values
-    (1, 'ARCHIVED', 'ACTIVE', '2023-09-01 10:21', 2),
-    (2, 'ARCHIVED', 'ACTIVE', '2023-09-01 10:51', 2),
-    (3, 'ARCHIVED', 'ACTIVE', '2023-09-02 13:21', 2),
-    (4, 'ARCHIVED', 'ACTIVE', '2023-09-03 15:21', 3),
-    (5, 'ARCHIVED', 'ACTIVE', '2023-09-03 16:21', 3),
-    (3, 'ACTIVE', 'BLOCKED', '2023-09-03 18:00', 4);
+    (1, 'NEW', 'PUBLISHED', '2023-09-01 10:21', 2),
+    (2, 'NEW', 'PUBLISHED', '2023-09-01 10:51', 2),
+    (3, 'NEW', 'PUBLISHED', '2023-09-02 13:21', 2),
+    (4, 'NEW', 'PUBLISHED', '2023-09-03 15:21', 3),
+    (5, 'NEW', 'PUBLISHED', '2023-09-03 16:21', 3),
+    (3, 'PUBLISHED', 'BLOCKED', '2023-09-03 18:00', 4);
 
 insert into bookings (user_id, item_id, booking_datetime) values
     (4, 3, '2023-09-03 18:00');
@@ -76,10 +63,10 @@ insert into bookings (user_id, item_id, booking_datetime) values
 insert into saved_items (user_id, item_id, added_datetime) values
     (4, 3, '2023-09-03 15:00'),
     (4, 4, '2023-09-03 15:05'),
-    (2, 3, '2023-09-03 13:25'),
+    (3, 4, '2023-09-03 15:25'),
     (4, 5, '2023-09-04 15:05');
 
-insert into subscriptions (user_id, name, created_datetime) values
+insert into subscriptions (user_id, name, creation_datetime) values
     (4, 'Хочу гель или мыло для душа', '2023-09-01 15:10'),
     (4, 'Ищу что бы надеть', '2023-09-01 15:30'),
     (3, 'Что-нибудь на замену волко-трусам', '2023-09-03 16:30');

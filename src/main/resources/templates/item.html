@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--suppress HtmlRequiredAltAttribute, RequiredAttributes, HtmlDeprecatedAttribute -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${item.title}"></title>
+</head>
+<body>
+    <a th:href="@{/home}">Главная</a>
+    <a th:href="@{/search}">Поиск</a>
+    <a th:href="@{/profile}">Профиль</a>
+    <div th:width="600">
+        <h2 th:text="${item.title}"></h2>
+        <img th:src="@{/photos/{id}(id=${item.photoId})}" width="600" height="600"/>
+        <p th:text="${item.description}"></p>
+        <table border="1">
+            <thead>
+                <tr><td>Категории</td></tr>
+            </thead>
+            <tbody>
+                <tr th:each="category : ${categories}">
+                    <td>
+                        <table><tr>
+                            <td>
+                                <label th:text="${category.name}" th:title="${category.description}"></label>
+                            </td>
+                            <td>
+                                <label th:text="${category.groupName}" th:title="${category.groupDescription}"></label>
+                            </td>
+                        </tr></table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+        <table border="1">
+            <thead>
+            <tr><td colspan="2" align="center">Метаинформация</td></tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Статус</td>
+                <td th:text="${item.status}"></td>
+            </tr>
+            <tr>
+                <td>Владелец</td>
+                <td th:text="${owner.login}"></td>
+            </tr>
+            <tr>
+                <td>Время создания</td>
+                <td th:text="${item.creationDatetime}"></td>
+            </tr>
+            <tr>
+                <td>Общежитие</td>
+                <td>
+                    <table border="1">
+                        <tr>
+                            <td>Название</td>
+                            <td th:text="${dormitory.name}"></td>
+                        </tr>
+                        <tr>
+                            <td>Адрес</td>
+                            <td th:text="${dormitory.address}"></td>
+                        </tr>
+                        <tr>
+                            <td>Комната</td>
+                            <td th:text="${owner.room}"></td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

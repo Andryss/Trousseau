@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<!--suppress HtmlFormInputWithoutLabel, HtmlDeprecatedAttribute, HtmlRequiredAltAttribute, RequiredAttributes -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Поиск</title>
+</head>
+<body>
+    <a th:href="@{/home}">Главная</a>
+    <a th:href="@{/search}">Поиск</a>
+    <a th:href="@{/profile}">Профиль</a>
+    <h2>Страница поиска</h2>
+    <form th:action="@{/search}" th:object="${searchRequest}" method="get">
+        <input type="text" th:field="*{query}" placeholder="Поиск...">
+        <br/>
+        <table><tr style="vertical-align: baseline">
+            <td th:each="group : ${allCategories}">
+                <table>
+                    <thead><tr><td>
+                        <label th:text="${group.name}" th:title="${group.description}"></label>
+                    </td></tr></thead>
+                    <tbody>
+                        <tr th:each="category : ${group.categories}">
+                            <td>
+                                <input type="checkbox" th:field="*{categories}" th:value="${category.name}"/>
+                                <label th:for="${#ids.prev('categories')}" th:text="${category.name}" th:title="${category.description}"></label>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr></table>
+        <input type="submit" value="Поиск">
+    </form>
+    <br/>
+    <th:block th:if="${!#lists.isEmpty(result)}">
+        <table border="1" width="300">
+            <thead>
+            <tr><td align="center">Результат</td></tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(result)}">
+                <td align="center">*пусто*</td>
+            </tr>
+            <tr th:each="item : ${result}">
+                <td width="300">
+                    <img th:src="@{/photos/{id}(id=${item.photoId})}" width="300" height="300"/>
+                    <h4 th:text="${item.title}"></h4>
+                    <label th:text="${#strings.abbreviate(item.description, 100)}"></label>
+                    <table style="padding-top: 10px"><tr>
+                        <td>
+                            <form th:action="@{/items/{id}(id=${item.id})}" method="get">
+                                <input type="submit" value="открыть">
+                            </form>
+                        </td>
+                        <td>
+                            <form th:action="@{/items/{id}:bookItem(id=${item.id})}" method="post">
+                                <input type="submit" value="захотеть">
+                            </form>
+                        </td>
+                        <td>
+                            <form th:action="@{/items/{id}:save(id=${item.id})}" method="post">
+                                <input type="submit" value="мечтать">
+                            </form>
+                        </td>
+                    </tr></table>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <br/>
+    </th:block>
+</body>
+</html>
