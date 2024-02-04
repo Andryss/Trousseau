@@ -3,6 +3,7 @@ package ru.itmo.trousseau.repository;
 import java.sql.Timestamp;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,29 +12,11 @@ import org.springframework.stereotype.Repository;
 import ru.itmo.trousseau.model.Subscription;
 
 @Repository
+@RequiredArgsConstructor
 public class SubscriptionRepositoryImpl implements SubscriptionRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final RowMapper<Subscription> mapper;
-
-    private final String insertQuery;
-    private final String selectByUserIdQuery;
-    private final String selectByCategoriesQuery;
-
-
-    public SubscriptionRepositoryImpl(NamedParameterJdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.mapper = new BeanPropertyRowMapper<>(Subscription.class);
-        this.insertQuery = """
-            select * from insert_subscription(:userId, :name, :creationDatetime)
-            """;
-        this.selectByUserIdQuery = """
-            select * from find_subscriptions(:userId)
-            """;
-        this.selectByCategoriesQuery = """
-            select * from find_covering_subscriptions(:categories)
-            """;
-    }
+    private final RowMapper<Subscription> mapper = new BeanPropertyRowMapper<>(Subscription.class);
 
     @Override
     public long save(long userId, String name, Timestamp creationDatetime) {
@@ -41,19 +24,25 @@ public class SubscriptionRepositoryImpl implements SubscriptionRepository {
         params.addValue("userId", userId);
         params.addValue("name", name);
         params.addValue("creationDatetime", creationDatetime);
-        //noinspection DataFlowIssue
-        return jdbcTemplate.queryForObject(insertQuery, params, Long.class);
+        //noinspection DataFlowIssue,ConstantConditions
+        return jdbcTemplate.queryForObject("""
+            select * from insert_subscription(:userId, :name, :creationDatetime)
+            """, params, Long.class);
     }
 
     @Override
     public List<Subscription> findAllByUserId(long userId) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
-        return jdbcTemplate.query(selectByUserIdQuery, params, mapper);
+        return jdbcTemplate.query("""
+            select * from find_subscriptions(:userId)
+            """, params, mapper);
     }
 
     @Override
     public List<Subscription> findAllByCategoriesIn(String[] categories) {
         MapSqlParameterSource params = new MapSqlParameterSource("categories", categories);
-        return jdbcTemplate.query(selectByCategoriesQuery, params, mapper);
+        return jdbcTemplate.query("""
+            select * from find_covering_subscriptions(:categories)
+            """, params, mapper);
     }
 }
