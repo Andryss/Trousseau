@@ -1,0 +1,119 @@
+openapi: 3.0.3
+info:
+  title: Trousseau
+  description: Сервис для передачи вещей внутри общежития
+  version: 0.0.2
+servers:
+  - url: https://localhost:8080
+components:
+  schemas:
+    ErrorObject:
+      type: object
+      properties:
+        message:
+          type: string
+    dormitoryId:
+      type: string
+    dormitoryName:
+      type: string
+    dormitoryDescription:
+      type: string
+    DormitoryDto:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/dormitoryId"
+        name:
+          $ref: "#/components/schemas/dormitoryName"
+        description:
+          $ref: "#/components/schemas/dormitoryDescription"
+    login:
+      type: string
+    password:
+      type: string
+    SignInRequest:
+      type: object
+      properties:
+        login:
+          $ref: "#/components/schemas/login"
+        password:
+          $ref: "#/components/schemas/password"
+    token:
+      type: string
+    SignInResponse:
+      type: object
+      properties:
+        token:
+          $ref: "#/components/schemas/token"
+    SignUpRequest:
+      type: object
+      properties:
+        login:
+          $ref: "#/components/schemas/login"
+        password:
+          $ref: "#/components/schemas/password"
+        dormitory:
+          $ref: "#/components/schemas/dormitoryId"
+paths:
+  /dormitories:
+    get:
+      summary: Получение всех общежитий
+      tags:
+        - auth
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DormitoryDto"
+  /auth:signIn:
+    post:
+      summary: Вход в систему
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInRequest"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignInResponse"
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorObject"
+        401:
+          description: UNAUTHORIZED
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorObject"
+  /auth:signUp:
+    post:
+      summary: Регистрация в системе
+      tags:
+        - auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpRequest"
+      responses:
+        200:
+          description: OK
+        400:
+          description: BAD REQUEST
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorObject"
