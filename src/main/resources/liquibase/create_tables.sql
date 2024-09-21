@@ -40,7 +40,7 @@ create table categories (
 );
 
 create table items (
-    id bigserial primary key,
+    id text primary key,
     title text not null,
     description text not null,
     status text not null,
