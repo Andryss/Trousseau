@@ -12,21 +12,6 @@ components:
       properties:
         message:
           type: string
-    dormitoryId:
-      type: string
-    dormitoryName:
-      type: string
-    dormitoryDescription:
-      type: string
-    DormitoryDto:
-      type: object
-      properties:
-        id:
-          $ref: "#/components/schemas/dormitoryId"
-        name:
-          $ref: "#/components/schemas/dormitoryName"
-        description:
-          $ref: "#/components/schemas/dormitoryDescription"
     login:
       type: string
     password:
@@ -46,29 +31,91 @@ components:
         token:
           $ref: "#/components/schemas/token"
     SignUpRequest:
+      $ref: "#/components/schemas/SignInRequest"
+    dormitoryId:
+      type: string
+    dormitoryName:
+      type: string
+    dormitoryDescription:
+      type: string
+    DormitoryDto:
       type: object
       properties:
-        login:
-          $ref: "#/components/schemas/login"
-        password:
-          $ref: "#/components/schemas/password"
-        dormitory:
+        id:
           $ref: "#/components/schemas/dormitoryId"
+        name:
+          $ref: "#/components/schemas/dormitoryName"
+        description:
+          $ref: "#/components/schemas/dormitoryDescription"
+    itemTitle:
+      type: string
+      minLength: 10
+    itemDescription:
+      type: string
+      minLength: 20
+    mediaId:
+      type: string
+    mediaUrl:
+      type: string
+    index:
+      type: integer
+      minimum: 0
+    mediaIdsList:
+      type: array
+      items:
+        $ref: "#/components/schemas/mediaId"
+    MediaDto:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/mediaId"
+        href:
+          $ref: "#/components/schemas/mediaUrl"
+        index:
+          $ref: "#/components/schemas/index"
+    MediaDtoList:
+      type: array
+      items:
+        $ref: "#/components/schemas/MediaDto"
+    category:
+      type: string
+    categoryList:
+      type: array
+      items:
+        $ref: "#/components/schemas/category"
+    itemStatus:
+      type: string
+      enum:
+        - DRAFT
+        - READY
+        - PUBLISHED
+        - BOOKED
+        - ARCHIVE
+    ItemDto:
+      type: object
+      properties:
+        title:
+          $ref: "#/components/schemas/itemTitle"
+        description:
+          $ref: "#/components/schemas/itemDescription"
+        media:
+          $ref: "#/components/schemas/MediaDtoList"
+        categories:
+          $ref: "#/components/schemas/categoryList"
+        status:
+          $ref: "#/components/schemas/itemStatus"
+    CreateItemRequest:
+      type: object
+      properties:
+        title:
+          $ref: "#/components/schemas/itemTitle"
+        description:
+          $ref: "#/components/schemas/itemDescription"
+        media:
+          $ref: "#/components/schemas/mediaIdsList"
+        categories:
+          $ref: "#/components/schemas/categoryList"
 paths:
-  /dormitories:
-    get:
-      summary: Получение всех общежитий
-      tags:
-        - auth
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/DormitoryDto"
   /auth:signIn:
     post:
       summary: Вход в систему
@@ -117,3 +164,17 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrorObject"
+  /dormitories:
+    get:
+      summary: Получение всех общежитий
+      tags:
+        - profile
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DormitoryDto"
