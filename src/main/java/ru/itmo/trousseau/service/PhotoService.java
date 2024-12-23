@@ -6,4 +6,5 @@ public interface PhotoService {
     byte[] findById(long id);
     String save(MultipartFile file);
     long saveOld(MultipartFile file);
+    String toNewId(long oldId);
 }

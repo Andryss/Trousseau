@@ -7,6 +7,8 @@ import io.minio.GetObjectArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.StatObjectArgs;
+import io.minio.errors.ErrorResponseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -55,6 +57,24 @@ public class S3ServiceImpl implements S3Service, InitializingBean, DisposableBea
                             .contentType(file.getContentType())
                             .build()
             );
+        } catch (Exception e) {
+            log.error("Error while uploading object", e);
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean exists(String path) {
+        try {
+            client.statObject(
+                    StatObjectArgs.builder()
+                            .bucket(properties.getBucket())
+                            .object(path)
+                            .build()
+            );
+            return true;
+        } catch (ErrorResponseException e) {
+            log.error("Catch ErrorResponseException", e);
+            return false;
         } catch (Exception e) {
             log.error("Error while uploading object", e);
             throw new RuntimeException(e);

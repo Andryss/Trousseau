@@ -27,10 +27,8 @@ public class PhotoServiceImpl implements PhotoService {
     @Override
     public byte[] findById(long id) {
         try {
-            log.error("Trying to read photo data from S3");
-            ZonedDateTime instant = Instant.ofEpochMilli(id).atZone(ZoneOffset.UTC);
-            String path = formatter.format(instant);
-            return s3Service.get(path);
+            log.info("Trying to read photo data from S3");
+            return s3Service.get(toNewId(id));
         } catch (Exception e) {
             log.error("Error while reading photo data from S3. Trying to read from DB", e);
             Photo photo = photoRepository.findById(id).orElseThrow(() -> new NotFoundException(String.valueOf(id)));
@@ -52,5 +50,11 @@ public class PhotoServiceImpl implements PhotoService {
         String path = formatter.format(now);
         s3Service.put(path, file);
         return now.toInstant().toEpochMilli();
+    }
+
+    @Override
+    public String toNewId(long oldId) {
+        ZonedDateTime instant = Instant.ofEpochMilli(oldId).atZone(ZoneOffset.UTC);
+        return formatter.format(instant);
     }
 }
