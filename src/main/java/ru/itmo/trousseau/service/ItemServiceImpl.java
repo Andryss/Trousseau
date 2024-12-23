@@ -1,6 +1,5 @@
 package ru.itmo.trousseau.service;
 
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.itmo.trousseau.exception.BadRequestException;
 import ru.itmo.trousseau.exception.NotFoundException;
 import ru.itmo.trousseau.messages.CreateItemRequest;
 import ru.itmo.trousseau.messages.SearchRequest;
@@ -17,7 +15,6 @@ import ru.itmo.trousseau.model.Subscription;
 import ru.itmo.trousseau.model.User;
 import ru.itmo.trousseau.repository.CategoryRepository;
 import ru.itmo.trousseau.repository.ItemRepository;
-import ru.itmo.trousseau.repository.PhotoRepository;
 import ru.itmo.trousseau.repository.SubscriptionRepository;
 import ru.itmo.trousseau.repository.UserRepository;
 
@@ -29,9 +26,9 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
-    private final PhotoRepository photoRepository;
     private final CategoryRepository categoryRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final PhotoService photoService;
 
     @Override
     public Item findById(long id) {
@@ -53,13 +50,7 @@ public class ItemServiceImpl implements ItemService {
     public void createItem(CreateItemRequest request, String username) {
         User user = userRepository.findByLoginIgnoreCase(username).orElseThrow(() -> new NotFoundException(username));
 
-        byte[] data;
-        try {
-            data = request.getPhoto().getBytes();
-        } catch (IOException e) {
-            throw new BadRequestException("photo");
-        }
-        long photoId = photoRepository.save(data, Timestamp.from(Instant.now()));
+        long photoId = photoService.saveOld(request.getPhoto());
 
         long itemId = itemRepository.save(request.getTitle(), photoId, request.getDescription(),
                 user.getId(), Timestamp.from(Instant.now()));

@@ -15,4 +15,6 @@
     <include file="sql/create_triggers.sql"/>
     <include file="sql/create_index.sql"/>
 
+    <include file="/sql/remove_photo_reference.sql"/>
+
 </databaseChangeLog>

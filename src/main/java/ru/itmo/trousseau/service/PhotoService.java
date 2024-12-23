@@ -1,7 +1,10 @@
 package ru.itmo.trousseau.service;
 
-import ru.itmo.trousseau.model.Photo;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface PhotoService {
-    Photo findById(long id);
+    byte[] findById(long id);
+    String save(MultipartFile file);
+    long saveOld(MultipartFile file);
+    String toNewId(long oldId);
 }
