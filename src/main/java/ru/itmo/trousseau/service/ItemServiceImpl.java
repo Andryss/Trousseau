@@ -50,7 +50,7 @@ public class ItemServiceImpl implements ItemService {
     public void createItem(CreateItemRequest request, String username) {
         User user = userRepository.findByLoginIgnoreCase(username).orElseThrow(() -> new NotFoundException(username));
 
-        long photoId = photoService.saveOld(request.getPhoto(), user.getLogin());
+        long photoId = photoService.saveOld(request.getPhoto());
 
         long itemId = itemRepository.save(request.getTitle(), photoId, request.getDescription(),
                 user.getId(), Timestamp.from(Instant.now()));
