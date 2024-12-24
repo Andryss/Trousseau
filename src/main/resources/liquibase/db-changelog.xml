@@ -17,4 +17,6 @@
 
     <include file="/sql/remove_photo_reference.sql"/>
 
+    <include file="table/table-changelog.xml" relativeToChangelogFile="true"/>
+
 </databaseChangeLog>
