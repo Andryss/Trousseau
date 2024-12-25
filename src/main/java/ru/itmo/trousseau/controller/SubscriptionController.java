@@ -2,6 +2,7 @@ package ru.itmo.trousseau.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ public class SubscriptionController {
     private final CategoryService categoryService;
     private final SubscriptionService subscriptionService;
 
+    @Secured("CREATE_SUBSCRIPTION_ACTION")
     @GetMapping("/subscriptions/new")
     public String newSubscriptionPage(CreateSubscriptionRequest createSubscriptionRequest, Model model) {
         model.addAttribute("createSubscriptionRequest", createSubscriptionRequest);
@@ -26,6 +28,7 @@ public class SubscriptionController {
         return "subscription_new";
     }
 
+    @Secured("CREATE_SUBSCRIPTION_ACTION")
     @PostMapping("/subscriptions/new")
     public String doCreateSubscription(@Valid CreateSubscriptionRequest createSubscriptionRequest, BindingResult bindingResult, Authentication authentication, Model model) {
         if (bindingResult.hasErrors()) {

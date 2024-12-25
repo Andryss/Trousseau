@@ -1,6 +1,7 @@
 package ru.itmo.trousseau.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,7 @@ public class SearchController {
     private final CategoryService categoryService;
     private final ItemService itemService;
 
+    @Secured("VIEW_SEARCH_PAGE")
     @GetMapping("/search")
     public String searchPage(SearchRequest searchRequest, Model model) {
         model.addAttribute("allCategories", categoryService.findAll());

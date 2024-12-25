@@ -3,6 +3,7 @@ package ru.itmo.trousseau.controller;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +30,7 @@ public class ProfileController {
     private final SavedItemsService savedItemsService;
     private final SubscriptionService subscriptionService;
 
+    @Secured("VIEW_PROFILE_PAGE")
     @GetMapping("/profile")
     public String profilePage(Authentication authentication, Model model) {
         User user = userService.findByUsername(authentication.getName());

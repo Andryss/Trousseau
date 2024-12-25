@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,6 +38,7 @@ public class ItemController {
     private final DormitoryService dormitoryService;
     private final SavedItemsService savedItemsService;
 
+    @Secured("PUBLIC")
     @GetMapping("/items/{item_id}")
     public String itemPage(@PathVariable("item_id") long itemId, Model model) {
         Item item = itemService.findById(itemId);
@@ -50,6 +52,7 @@ public class ItemController {
         return "item";
     }
 
+    @Secured("VIEW_NEW_ITEM_PAGE")
     @GetMapping("/items/new")
     public String newItemPage(CreateItemRequest createItemRequest, Model model) {
         model.addAttribute("createItemRequest", createItemRequest);
@@ -57,6 +60,7 @@ public class ItemController {
         return "item_new";
     }
 
+    @Secured("CREATE_ITEM_ACTION")
     @PostMapping("/items/new")
     public String doCreateItem(@Valid CreateItemRequest createItemRequest, BindingResult bindingResult, Authentication authentication, Model model) {
         createItemRequestValidator.validate(createItemRequest, bindingResult);
@@ -68,30 +72,35 @@ public class ItemController {
         return "redirect:/profile";
     }
 
+    @Secured("BOOK_ITEM_ACTION")
     @PostMapping("/items/{item_id}:bookItem")
     public String doBookItem(@PathVariable("item_id") long itemId, Authentication authentication) {
         bookingService.bookItem(itemId, authentication.getName());
         return "redirect:/profile";
     }
 
+    @Secured("CREATE_ITEM_ACTION")
     @PostMapping("/items/{item_id}:closeItem")
     public String doCloseItem(@PathVariable("item_id") long itemId, Authentication authentication) {
         bookingService.closeItem(itemId, authentication.getName());
         return "redirect:/profile";
     }
 
+    @Secured("BOOK_ITEM_ACTION")
     @PostMapping("/items/{item_id}:cancelBooking")
     public String doCancelBooking(@PathVariable("item_id") long itemId, Authentication authentication) {
         bookingService.cancelBooking(itemId, authentication.getName());
         return "redirect:/profile";
     }
 
+    @Secured("SAVE_ITEM_ACTION")
     @PostMapping("/items/{item_id}:save")
     public String doAddToSaved(@PathVariable("item_id") long itemId, Authentication authentication) {
         savedItemsService.addToSaved(authentication.getName(), itemId);
         return "redirect:/profile";
     }
 
+    @Secured("SAVE_ITEM_ACTION")
     @PostMapping("/items/{item_id}:unsave")
     public String doDeleteFromSaved(@PathVariable("item_id") long itemId, Authentication authentication) {
         savedItemsService.deleteFromSaved(authentication.getName(), itemId);
