@@ -17,7 +17,7 @@ public class PrivilegesRepositoryImpl implements PrivilegesRepository {
     public List<String> findAllForUser(long userId) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
         return jdbcTemplate.queryForList("""
-                select p.privilege from users u
+                select distinct p.privilege from users u
                     join user_roles ur on ur.user_id = u.id
                     join roles r on ur.role_id = r.id
                     join role_privileges rp on rp.role_id = r.id

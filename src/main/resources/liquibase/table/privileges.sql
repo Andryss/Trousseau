@@ -6,5 +6,13 @@ create table privileges (
     privilege text
 );
 
---changeset andryss:add-admin-privileges
-insert into privileges (id, privilege) values ('sup', 'SUPERUSER');
+--changeset andryss:add-privileges
+insert into privileges (id, privilege) values ('pages.home.view', 'VIEW_HOME_PAGE'),
+                                              ('pages.profile.view', 'VIEW_PROFILE_PAGE'),
+                                              ('pages.search.view', 'VIEW_SEARCH_PAGE'),
+                                              ('public', 'PUBLIC'),
+                                              ('pages.item.new.view', 'VIEW_NEW_ITEM_PAGE'),
+                                              ('actions.item.create', 'CREATE_ITEM_ACTION'),
+                                              ('actions.item.book', 'BOOK_ITEM_ACTION'),
+                                              ('actions.item.save', 'SAVE_ITEM_ACTION'),
+                                              ('actions.subscription.create', 'CREATE_SUBSCRIPTION_ACTION');

@@ -49,7 +49,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     public List<Item> findAllByUserId(long userId) {
         MapSqlParameterSource params = new MapSqlParameterSource("userId", userId);
         return jdbcTemplate.query("""
-            select * from find_booked_items(:userId)
+            select * from items where user_id = :userId
             """, params, mapper);
     }
 
