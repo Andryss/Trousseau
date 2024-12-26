@@ -2,6 +2,7 @@ package ru.itmo.trousseau.repository;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -40,5 +41,12 @@ public class PhotoRepositoryImpl implements PhotoRepository {
             return Optional.empty();
         }
         return Optional.of(dormitories.get(0));
+    }
+
+    @Override
+    public List<Long> findAllIds() {
+        return jdbcTemplate.queryForList("""
+                select id from photos
+                """, Map.of(), Long.class);
     }
 }
