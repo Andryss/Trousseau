@@ -19,6 +19,8 @@
     <properties>
         <java.version>17</java.version>
         <minio.version>8.5.14</minio.version>
+        <zonky.embedded-database.version>2.6.0</zonky.embedded-database.version>
+        <zonky.embedded-postgres.version>2.1.0</zonky.embedded-postgres.version>
     </properties>
 
     <dependencies>
@@ -75,6 +77,18 @@
             <groupId>io.minio</groupId>
             <artifactId>minio</artifactId>
             <version>${minio.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.zonky.test</groupId>
+            <artifactId>embedded-database-spring-test</artifactId>
+            <version>${zonky.embedded-database.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.zonky.test</groupId>
+            <artifactId>embedded-postgres</artifactId>
+            <version>${zonky.embedded-postgres.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
